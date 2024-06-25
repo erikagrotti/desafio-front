@@ -3,7 +3,12 @@ import { RouterOutlet } from '@angular/router';
 import { DefauldLoginLayoutComponent } from './component/defauld-login-layout/defauld-login-layout.component';
 import { LoginComponent } from './component/login/login.component';
 import { PrimaryInputComponent } from './component/primary-input/primary-input.component';
-import {SignupComponent} from './component/signup/signup.component'
+import {SignupComponent} from './component/signup/signup.component';
+import {MainComponent} from './component/main/main.component';
+import{ FooterComponent } from './component/footer/footer.component'
+import { HeaderComponent } from './component/header/header.component'
+import { SidebarComponent } from './component/sidebar/sidebar.component'
+import {TaskListComponent} from './component/task-list/task-list.component'
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -12,7 +17,12 @@ import {SignupComponent} from './component/signup/signup.component'
     DefauldLoginLayoutComponent, 
     LoginComponent, 
     PrimaryInputComponent,
-    SignupComponent
+    SignupComponent,
+    MainComponent,
+    FooterComponent,
+    HeaderComponent,
+    SidebarComponent,
+    TaskListComponent
 ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'

@@ -1,56 +1,48 @@
-import { Injectable } from '@angular/core';
-import { CognitoIdentityServiceProvider } from 'aws-sdk';
-import { environment } from '../src/environments/environments.prod'; // Certifique-se de apontar para o arquivo correto
+// // src/app/services/auth.service.ts
+// import { Injectable, afterNextRender } from '@angular/core';
+// // import { FormControl } from '@angular/forms'; // Importe FormControl
+// import { CognitoUserPool, CognitoUser, AuthenticationDetails } from 'amazon-cognito-identity-js';
+// import { environment } from '../src/environments/environments.prod';
+// import { Router } from '@angular/router'; // Importe o Router
 
-@Injectable({
-  providedIn: 'root',
-})
-export class AuthService {
-  private cognito = new CognitoIdentityServiceProvider({
-    region: environment.aws.region,
-  });
+// @Injectable({
+//   providedIn: 'root'
+// })
+// export class AuthService {
 
-  constructor() {}
+//   private userPool!: CognitoUserPool;
 
-  async signIn(email: string, password: string): Promise<void> {
-    const params = {
-      AuthFlow: 'USER_PASSWORD_AUTH',
-      ClientId: environment.aws.clientId,
-      AuthParameters: {
-        USERNAME: email,
-        PASSWORD: password,
-      },
-    };
+//   constructor(private router: Router) {
+//       const poolData = {
+//         UserPoolId: environment.aws.userPoolId,
+//         ClientId: environment.aws.clientId
+//       };
+//       this.userPool = new CognitoUserPool(poolData);
+//   }
 
-    try {
-      const result = await this.cognito.initiateAuth(params).promise();
-      console.log('Autenticação bem-sucedida:', result); // Log de sucesso
-      // Aqui você pode armazenar tokens em armazenamento local ou sessão, se necessário
-    } catch (error: any) {
-      console.error('Erro na autenticação:', error); // Log detalhado de erro
-      throw error;
-    }
-  }
+//   signIn(email: string, password: string): Promise<any> { // Remova os FormControl<string | null>
+//     const authenticationDetails = new AuthenticationDetails({
+//       Username: email,
+//       Password: password,
+//     });
 
-  async signUp(email: string, password: string): Promise<void> {
-    const params = {
-      ClientId: environment.aws.clientId,
-      Username: email,
-      Password: password,
-      UserAttributes: [
-        {
-          Name: 'email',
-          Value: email
-        }
-      ]
-    };
+//     const userData = {
+//       Username: email,
+//       Pool: this.userPool
+//     };
 
-    try {
-      const result = await this.cognito.signUp(params).promise();
-      console.log('Cadastro bem-sucedido:', result); // Log de sucesso
-    } catch (error: any) {
-      console.error('Erro no cadastro:', error); // Log detalhado de erro
-      throw error;
-    }
-  }
-}
+//     const cognitoUser = new CognitoUser(userData);
+
+//     return new Promise((resolve, reject) => {
+//       cognitoUser.authenticateUser(authenticationDetails, {
+//         onSuccess: (result) => {
+//           resolve(result);
+//           this.router.navigate(['/dashboard']); // Redireciona para o dashboard após o login
+//         },
+//         onFailure: (err) => {
+//           reject(err);
+//         }
+//       });
+//     });
+//   }
+// }

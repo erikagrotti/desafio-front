@@ -1,0 +1,40 @@
+.sidebar {
+    background-color: #333;
+    color: #fff;
+    width: 250px;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    overflow-y: auto;
+  }
+  
+  .sidebar-header {
+    padding: 20px;
+    border-bottom: 1px solid #444;
+  }
+  
+  .menu {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .menu li {
+    padding: 10px 20px;
+    border-bottom: 1px solid #444;
+  }
+  
+  .menu li:last-child {
+    border-bottom: none;
+  }
+  
+  .menu li a {
+    color: #fff;
+    text-decoration: none;
+    display: block;
+  }
+  
+  .menu li a:hover {
+    background-color: #555;
+  }
+  
