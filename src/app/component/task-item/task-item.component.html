@@ -1,7 +1,9 @@
-<mat-checkbox
-  [checked]="task.status"
-  [indeterminate]="isIndeterminate()" 
-  (change)="updateStatus($event.checked)"
->
-  {{ task.title }}
-</mat-checkbox>
+<mat-list-item>
+  <mat-checkbox
+    [checked]="task.status"
+    [indeterminate]="isIndeterminate()"
+    (change)="updateStatus($event.checked)"
+  >
+    {{ task.title }}
+  </mat-checkbox>
+</mat-list-item>

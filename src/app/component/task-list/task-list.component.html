@@ -1,12 +1,10 @@
-<div class="task-list-wrapper">
-  <div *ngFor="let group of taskGroups$ | async" >
-    <mat-checkbox [(ngModel)]="group.listStatus" (ngModelChange)="updateListStatus(group)">
-      {{ group.listTitle }} 
-    </mat-checkbox> 
-    <ul class="task-list-container">
-      <li *ngFor="let task of group.tasks"> 
-        <app-task-item [task]="task" (taskChange)="updateTaskStatus($event)"></app-task-item>
-      </li>
-    </ul>
-  </div>
-</div>
+<mat-list *ngFor="let group of (taskGroups$ | async)">
+  <mat-list-item>
+    <mat-checkbox [checked]="group.listStatus" (change)="updateListStatus(group)">
+      {{ group.listTitle }}
+    </mat-checkbox>
+  </mat-list-item>
+  <mat-list *ngFor="let task of group.tasks">
+    <app-task-item [task]="task" (taskChange)="updateTaskStatus($event)"></app-task-item>
+  </mat-list>
+</mat-list>

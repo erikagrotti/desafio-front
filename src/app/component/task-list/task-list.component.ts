@@ -7,6 +7,7 @@ import { map } from 'rxjs/operators';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { FormsModule } from '@angular/forms';
 import { TaskItemComponent } from '../task-item/task-item.component';
+import { MatListModule } from '@angular/material/list'; // Importar MatListModule
 
 interface TaskGroup {
   listID: number;
@@ -20,7 +21,7 @@ interface TaskGroup {
   selector: 'app-task-list',
   templateUrl: './task-list.component.html',
   styleUrls: ['./task-list.component.scss'],
-  imports: [CommonModule, MatCheckboxModule, FormsModule, TaskItemComponent] 
+  imports: [CommonModule, MatCheckboxModule, FormsModule, TaskItemComponent, MatListModule]
 })
 export class TaskListComponent implements OnInit {
   taskGroups$: Observable<TaskGroup[]> = new Observable<TaskGroup[]>();
@@ -50,7 +51,7 @@ export class TaskListComponent implements OnInit {
           tasks: [] // Inicializa a lista de tarefas
         };
       }
-  
+
       if (task.taskID === 'T001') {
         // Define o título e o status da lista
         grouped[task.listID].listTitle = task.title;
@@ -60,9 +61,10 @@ export class TaskListComponent implements OnInit {
         grouped[task.listID].tasks.push(task);
       }
     });
-  
+
     return Object.values(grouped);
   }
+
   updateListStatus(group: TaskGroup): void {
     group.listStatus = !group.listStatus; // Alterna o status da lista
 
@@ -76,7 +78,10 @@ export class TaskListComponent implements OnInit {
   }
 
   updateTaskStatus(task: Task): void {
-    // Lógica para atualizar o status da tarefa no backend
-    console.log('Atualizando status da tarefa no backend:', task);
+    // Chama o método do serviço para atualizar o status da tarefa
+    this.taskService.updateTaskStatus(task).subscribe(
+      () => console.log('Status da tarefa atualizado com sucesso!'),
+      (error) => console.error('Erro ao atualizar status da tarefa:', error)
+    );
   }
 }

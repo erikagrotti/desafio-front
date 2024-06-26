@@ -26,5 +26,14 @@ export class TaskService {
           }));
         })
       );
+      
+  }
+
+  updateTaskStatus(task: Task): Observable<any> {
+    const url = `${this.apiUrl}/items/${task.taskID}`; // Construir a URL
+    const body = { status: task.status }; // Criar o corpo da requisição
+    return this.http.patch(url, body, {
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+    });
   }
 }
