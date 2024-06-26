@@ -1,10 +1,12 @@
-<div class="task-list-container">
-  <div class="task-list">
-    <h2>Lista de Tarefas</h2>
-    <ul class="tasks">
-      <li class="task-item">Tarefa 1</li>
-      <li class="task-item">Tarefa 2</li>
-      <li class="task-item">Tarefa 3</li>
+<div class="task-list-wrapper">
+  <div *ngFor="let group of taskGroups$ | async" >
+    <mat-checkbox [(ngModel)]="group.listStatus" (ngModelChange)="updateListStatus(group)">
+      {{ group.listTitle }} 
+    </mat-checkbox> 
+    <ul class="task-list-container">
+      <li *ngFor="let task of group.tasks"> 
+        <app-task-item [task]="task" (taskChange)="updateTaskStatus($event)"></app-task-item>
+      </li>
     </ul>
   </div>
 </div>

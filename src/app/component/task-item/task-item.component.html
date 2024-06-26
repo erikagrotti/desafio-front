@@ -1,0 +1,7 @@
+<mat-checkbox
+  [checked]="task.status"
+  [indeterminate]="isIndeterminate()" 
+  (change)="updateStatus($event.checked)"
+>
+  {{ task.title }}
+</mat-checkbox>
