@@ -1,0 +1,16 @@
+<h2>Criar Nova Lista de Tarefas</h2>
+
+<div>
+  <label for="listTitle">Título da Lista:</label>
+  <input type="text" id="listTitle" [(ngModel)]="listTitle" required>
+</div>
+
+<h3>Tarefas:</h3>
+<div *ngFor="let task of tasks; let i = index" class="task-input-group">
+  <label for="taskTitle{{i}}">Título da Tarefa {{i + 1}}:</label>
+  <input type="text" id="taskTitle{{i}}" [(ngModel)]="task.title">
+</div>
+
+<button class="primary" (click)="addTask()">Adicionar Tarefa</button>
+<button class="primary" (click)="saveTaskList()" [disabled]="isSaveDisabled">Salvar Lista</button>
+<button class="secondary" (click)="cancel()">Cancelar</button>

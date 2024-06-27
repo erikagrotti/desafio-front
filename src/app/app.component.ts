@@ -11,6 +11,8 @@ import { SidebarComponent } from './component/sidebar/sidebar.component';
 import { TaskListComponent } from './component/task-list/task-list.component';
 import { MatCheckboxModule } from '@angular/material/checkbox'
 import {TaskItemComponent} from './component/task-item/task-item.component'
+import {CreateTaskListComponent} from './component/create-task-list/create-task-list.component'
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-root',
@@ -28,6 +30,8 @@ import {TaskItemComponent} from './component/task-item/task-item.component'
     TaskListComponent,
     MatCheckboxModule,
     TaskItemComponent,
+    CreateTaskListComponent,
+    FormsModule
 ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'

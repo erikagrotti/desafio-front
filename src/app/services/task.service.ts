@@ -49,4 +49,16 @@ export class TaskService {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' })
     });
   }
+  createTask(task: Task): Observable<any> {
+    const url = `${this.apiUrl}/items`; // Rota para criar um novo item (tarefa)
+    return this.http.post(url, task, { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) });
+  }
+
+  // Cria várias tarefas (filhas)
+  createTasks(tasks: Task[]): Observable<any> {
+    // Você pode usar a rota /items (POST) para criar várias tarefas de uma vez
+    // ou criar uma nova rota na API para lidar com a criação em lote
+    const url = `${this.apiUrl}/items`;
+    return this.http.post(url, { tasks }, { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) });
+  }
 }
