@@ -2,18 +2,19 @@ import { Component, OnInit } from '@angular/core';
 import { TaskService } from '../../services/task.service';
 import { Task } from '../../models/task.models';
 import { CommonModule } from '@angular/common';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+// import { Observable } from 'rxjs';
+import { map, take } from 'rxjs/operators';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { FormsModule } from '@angular/forms';
 import { TaskItemComponent } from '../task-item/task-item.component';
-import { MatListModule } from '@angular/material/list'; // Importar MatListModule
+import { MatListModule } from '@angular/material/list';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 interface TaskGroup {
   listID: number;
-  listTitle: string; // Título da lista
-  listStatus: boolean; // Status da lista
-  tasks: Task[]; // Itens da lista (apenas tarefas)
+  listTitle: string;
+  listStatus: boolean;
+  tasks: Task[];
 }
 
 @Component({
@@ -24,40 +25,39 @@ interface TaskGroup {
   imports: [CommonModule, MatCheckboxModule, FormsModule, TaskItemComponent, MatListModule]
 })
 export class TaskListComponent implements OnInit {
-  taskGroups$: Observable<TaskGroup[]> = new Observable<TaskGroup[]>();
+  taskGroups$: BehaviorSubject<TaskGroup[]> = new BehaviorSubject<TaskGroup[]>([]);
 
-  constructor(private taskService: TaskService) {}
+  constructor(private taskService: TaskService) { }
 
   ngOnInit(): void {
     this.loadTasks();
   }
 
   loadTasks() {
-    this.taskGroups$ = this.taskService.getTasks().pipe(
+    this.taskService.getTasks().pipe(
       map(tasks => this.groupTasks(tasks))
-    );
+    ).subscribe(groupedTasks => {
+      this.taskGroups$.next(groupedTasks); // Emite o valor inicial para o BehaviorSubject
+    });
   }
 
   private groupTasks(tasks: Task[]): TaskGroup[] {
     const grouped: { [listID: number]: TaskGroup } = {};
 
     tasks.forEach(task => {
-      if (!grouped[task.listID]) { // Verifica se o grupo já existe
-        // Se o grupo não existe, cria um novo grupo
+      if (!grouped[task.listID]) {
         grouped[task.listID] = {
           listID: task.listID,
-          listTitle: '', // Inicializa o título como vazio
-          listStatus: false, // Inicializa o status como false
-          tasks: [] // Inicializa a lista de tarefas
+          listTitle: '',
+          listStatus: false,
+          tasks: []
         };
       }
 
       if (task.taskID === 'T001') {
-        // Define o título e o status da lista
         grouped[task.listID].listTitle = task.title;
         grouped[task.listID].listStatus = task.status;
       } else {
-        // Adiciona a tarefa à lista de tarefas do grupo
         grouped[task.listID].tasks.push(task);
       }
     });
@@ -66,22 +66,83 @@ export class TaskListComponent implements OnInit {
   }
 
   updateListStatus(group: TaskGroup): void {
-    group.listStatus = !group.listStatus; // Alterna o status da lista
+    group.listStatus = !group.listStatus;
 
-    // Atualiza o status de todas as tarefas da lista
+    // Atualiza o status de todos os filhos para corresponder ao pai
     group.tasks.forEach(task => {
       task.status = group.listStatus;
+      this.updateTaskStatus(task);
     });
 
-    // Lógica para atualizar o status no backend
-    console.log('Atualizando status da lista no backend:', group);
+    // Cria uma tarefa representando o pai
+    const parentTask: Task = {
+      listID: group.listID,
+      taskID: 'T001',
+      status: group.listStatus,
+      title: group.listTitle
+    };
+
+    // Atualiza apenas o status do pai no backend
+    this.taskService.updateParentTaskStatus(parentTask)
+      .subscribe(
+        () => console.log('Status do pai atualizado com sucesso!'),
+        (error) => console.error('Erro ao atualizar status do pai:', error)
+      );
   }
 
   updateTaskStatus(task: Task): void {
-    // Chama o método do serviço para atualizar o status da tarefa
     this.taskService.updateTaskStatus(task).subscribe(
-      () => console.log('Status da tarefa atualizado com sucesso!'),
+      () => {
+        console.log('Status da tarefa atualizado com sucesso!');
+        this.updateParentStatusIfNeeded(task); // Verifica e atualiza o pai se necessário
+      },
       (error) => console.error('Erro ao atualizar status da tarefa:', error)
     );
+  }
+
+  // Verifica se o status do pai precisa ser atualizado e, se sim, atualiza
+  private updateParentStatusIfNeeded(task: Task) {
+    this.taskGroups$.pipe(take(1)).subscribe((groups: TaskGroup[]) => {
+      const groupIndex = groups.findIndex((g: TaskGroup) => g.listID === task.listID);
+      if (groupIndex !== -1) {
+        const group = groups[groupIndex]; // Obtém a referência direta ao grupo
+  
+        // Verifica se TODOS os filhos estão marcados como 'true' (concluídos)
+        const allTasksCompleted = group.tasks.every((t: Task) => t.status === true);
+        if (allTasksCompleted) { 
+          // Atualiza o status do pai no frontend 
+          group.listStatus = true;
+
+          // Cria uma tarefa representando o pai
+          const parentTask: Task = {
+            listID: group.listID,
+            taskID: 'T001',
+            status: true, 
+            title: group.listTitle
+          };
+
+          // Atualiza o status do pai no backend
+          this.taskService.updateParentTaskStatus(parentTask)
+            .subscribe(
+              () => console.log('Status do pai atualizado com sucesso!'),
+              (error) => console.error('Erro ao atualizar status do pai:', error)
+            );
+        } else if (!group.tasks.every(t => t.status)) { // Se pelo menos uma tarefa não estiver concluída
+          group.listStatus = false; // Define o status do pai como 'false'
+          const parentTask: Task = {
+            listID: group.listID,
+            taskID: 'T001',
+            status: false, 
+            title: group.listTitle
+          };
+          this.taskService.updateParentTaskStatus(parentTask)
+            .subscribe(
+              () => console.log('Status do pai atualizado com sucesso!'),
+              (error) => console.error('Erro ao atualizar status do pai:', error)
+            );
+        }
+        this.taskGroups$.next([...groups]);
+      }
+    });
   }
 }

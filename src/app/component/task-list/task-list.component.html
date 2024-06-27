@@ -1,5 +1,5 @@
 <mat-list *ngFor="let group of (taskGroups$ | async)">
-  <mat-list-item>
+  <mat-list-item [ngClass]="{'parent-task': true}">
     <mat-checkbox [checked]="group.listStatus" (change)="updateListStatus(group)">
       {{ group.listTitle }}
     </mat-checkbox>

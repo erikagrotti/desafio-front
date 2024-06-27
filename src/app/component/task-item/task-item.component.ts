@@ -22,11 +22,13 @@ updateStatus(completed: boolean, index?: number) {
     this.task.status = this.task.subtasks.every(t => t.status);
   } else {
     this.task.status = completed;
+    this.taskChange.emit(this.task);
     // Atualiza o estado de todos os filhos (se a tarefa pai for marcada)
     this.task.subtasks?.forEach(t => (t.status = completed));
   }
   this.taskChange.emit(this.task);
 }
+
 
 isIndeterminate(): boolean {
   return !!this.task.subtasks &&

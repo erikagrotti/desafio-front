@@ -1,5 +1,5 @@
 .task-list {
-  background-color: #f0f0f0;
+  background-color: #e30808;
   padding: 20px;
   border-radius: 5px;
   box-shadow: 0 2px 4px rgb(199, 65, 65);
@@ -28,3 +28,13 @@
   text-decoration: none;
   list-style: none;
 }
+
+.parent-task {
+
+    font-size: 20px;
+    font-weight: bold;
+    font-style: italic;
+    background-color: rgb(230, 230, 230);
+    padding: 10px; // Adiciona um espaçamento interno
+    border-bottom: 1px solid rgb(6, 4, 4); // Adiciona uma linha divisória
+  }

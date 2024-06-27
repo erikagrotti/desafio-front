@@ -30,8 +30,21 @@ export class TaskService {
   }
 
   updateTaskStatus(task: Task): Observable<any> {
-    const url = `${this.apiUrl}/items/${task.taskID}`; // Construir a URL
-    const body = { status: task.status }; // Criar o corpo da requisição
+    const url = `${this.apiUrl}/items/${task.listID}/${task.taskID}`; // Incluir listID na URL
+    const body = { status: task.status }; 
+    return this.http.patch(url, body, {
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+    });
+  }
+
+  updateTasksStatus(listID: number, tasks: any[]): Observable<any> {
+    const url = `${this.apiUrl}/items/${listID}/status`;
+    return this.http.patch(url, { tasks: tasks }, { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) });
+  }
+
+  updateParentTaskStatus(task: Task): Observable<any> {
+    const url = `${this.apiUrl}/items/${task.listID}/${task.taskID}`;
+    const body = { status: task.status }; 
     return this.http.patch(url, body, {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' })
     });
