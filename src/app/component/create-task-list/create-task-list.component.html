@@ -7,7 +7,12 @@
 
 <h3>Tarefas:</h3>
 <div *ngFor="let task of tasks; let i = index" class="task-input-group">
-  <label for="taskTitle{{i}}">Título da Tarefa {{i + 1}}:</label>
+  <div class="task-header">
+    <label for="taskTitle{{i}}">Título da Tarefa {{i + 1}}:</label>
+    <button mat-icon-button (click)="deleteTask(i)">
+      <mat-icon>delete</mat-icon>
+    </button>
+  </div>
   <input type="text" id="taskTitle{{i}}" [(ngModel)]="task.title">
 </div>
 

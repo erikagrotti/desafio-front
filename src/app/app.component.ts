@@ -13,6 +13,8 @@ import { MatCheckboxModule } from '@angular/material/checkbox'
 import {TaskItemComponent} from './component/task-item/task-item.component'
 import {CreateTaskListComponent} from './component/create-task-list/create-task-list.component'
 import { FormsModule } from '@angular/forms';
+import {MainCreatedComponent} from './component/main-created/main-created.component'
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar'
 
 @Component({
   selector: 'app-root',
@@ -31,7 +33,9 @@ import { FormsModule } from '@angular/forms';
     MatCheckboxModule,
     TaskItemComponent,
     CreateTaskListComponent,
-    FormsModule
+    FormsModule,
+    MainCreatedComponent,
+    MatSnackBarModule
 ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'

@@ -5,6 +5,6 @@ export interface Task {
   taskID: string;
   title: string;
   status: boolean;
-  description?: string;
-  subtasks?: Task[]; // Para usar a lógica de tarefas pai/filho
+  description?: string; // '?' indica que a propriedade é opcional
+  subtasks?: Task[];   // '?' indica que a propriedade é opcional
 }

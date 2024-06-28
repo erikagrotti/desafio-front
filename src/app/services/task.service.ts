@@ -59,6 +59,7 @@ export class TaskService {
     // Você pode usar a rota /items (POST) para criar várias tarefas de uma vez
     // ou criar uma nova rota na API para lidar com a criação em lote
     const url = `${this.apiUrl}/items`;
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     return this.http.post(url, { tasks }, { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) });
   }
 }
