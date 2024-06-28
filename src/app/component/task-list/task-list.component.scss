@@ -1,10 +1,8 @@
 .task-list {
-  background-color: #e30808;
+  /* Estilos comentados removidos */
   padding: 20px;
   border-radius: 5px;
-  box-shadow: 0 2px 4px rgb(199, 65, 65);
-  // max-width: 600px; /* Largura máxima da task-list */
-  width: 100%; /* Para garantir que a largura seja respeitada */
+  width: 100%;
 }
 
 .tasks {
@@ -18,8 +16,6 @@
   align-items: center;
   width: 100%;
   height: 100%;
-  
-
 }
 
 .task-list-container {
@@ -28,15 +24,44 @@
   flex-direction: column;
   text-decoration: none;
   list-style: none;
-  
 }
 
 .parent-task {
+  font-size: 20px;
+  font-weight: bold;
+  font-style: italic;
+  background-color: rgb(231, 225, 225);
+  padding: 10px;
+  border-bottom: 1px solid rgb(6, 4, 4);
+  display: flex;          /* Ativa o Flexbox */
+  justify-content: space-between; /* Distribui os elementos com espaço entre eles */
+  align-items: center;    /* Alinha verticalmente ao centro */
+  position: relative;     /* Necessário para o posicionamento absoluto do botão */
+}
 
-    font-size: 20px;
-    font-weight: bold;
-    font-style: italic;
-    background-color: rgb(230, 230, 230);
-    padding: 10px; // Adiciona um espaçamento interno
-    border-bottom: 1px solid rgb(6, 4, 4); // Adiciona uma linha divisória
-  }
+.parent-task.mat-list-item {
+  display: flex; /* Define como flex para que funcione corretamente com o Flexbox */
+}
+
+.list_container {
+  width: 100%;
+  height: 80vh; /* Corrigido de 80dvh para 80vh */
+  overflow-y: scroll;
+}
+
+.delete-button {
+  position: absolute;
+  right: 20px; /* Ajuste conforme necessário */
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.delete-button:hover {
+  color: #616161; /* Muda a cor ao passar o mouse */
+  transform: scale(1.1); /* Aumenta ligeiramente ao passar o mouse */
+}
+
+.delete-button mat-icon {
+  color: #000000; /* Cor do ícone, ajuste conforme necessário */
+}

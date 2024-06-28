@@ -99,7 +99,7 @@ export class CreateTaskListComponent {
 
   // Método para cancelar a criação da lista
   cancel() {
-    this.router.navigate(['/']); // Ou a rota desejada para cancelar
+    this.router.navigate(['/main']); // Ou a rota desejada para cancelar
   }
 
   // Método para excluir uma tarefa

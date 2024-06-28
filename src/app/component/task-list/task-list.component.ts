@@ -9,6 +9,8 @@ import { FormsModule } from '@angular/forms';
 import { TaskItemComponent } from '../task-item/task-item.component';
 import { MatListModule } from '@angular/material/list';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { MatIconModule } from '@angular/material/icon';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 interface TaskGroup {
   listID: number;
@@ -22,12 +24,12 @@ interface TaskGroup {
   selector: 'app-task-list',
   templateUrl: './task-list.component.html',
   styleUrls: ['./task-list.component.scss'],
-  imports: [CommonModule, MatCheckboxModule, FormsModule, TaskItemComponent, MatListModule]
+  imports: [CommonModule, MatCheckboxModule, FormsModule, TaskItemComponent, MatListModule, MatIconModule ]
 })
 export class TaskListComponent implements OnInit {
   taskGroups$: BehaviorSubject<TaskGroup[]> = new BehaviorSubject<TaskGroup[]>([]);
 
-  constructor(private taskService: TaskService) { }
+  constructor(private taskService: TaskService, private snackBar: MatSnackBar) { }
 
   ngOnInit(): void {
     this.loadTasks();
@@ -144,5 +146,25 @@ export class TaskListComponent implements OnInit {
         this.taskGroups$.next([...groups]);
       }
     });
+  }
+
+  deleteTaskList(listID: number) {
+    if (confirm('Tem certeza que deseja excluir esta lista de tarefas?')) {
+      this.taskService.deleteTaskList(listID).subscribe(
+        () => {
+          console.log('Lista de tarefas excluída com sucesso!');
+          this.loadTasks(); // Recarrega as tarefas após a exclusão
+          this.snackBar.open('Lista de tarefas excluída com sucesso!', 'Fechar', {
+            duration: 3000 
+          }); 
+        },
+        error => {
+          console.error('Erro ao excluir lista de tarefas:', error);
+          this.snackBar.open('Erro ao excluir a lista de tarefas.', 'Fechar', {
+            duration: 5000
+          });
+        }
+      );
+    }
   }
 }

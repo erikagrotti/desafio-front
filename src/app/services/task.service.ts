@@ -62,4 +62,9 @@ export class TaskService {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     return this.http.post(url, { tasks }, { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) });
   }
+
+  deleteTaskList(listID: number): Observable<any> {
+    const url = `${this.apiUrl}/items/${listID}`; // Adapte a URL para sua API
+    return this.http.delete(url); // Ou o método HTTP adequado para sua API
+  }
 }

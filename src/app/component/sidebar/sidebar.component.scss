@@ -6,6 +6,11 @@
     height: 90dvh;
     overflow-y: auto;
   }
+  .menu li a {
+    /* ... seus outros estilos ... */
+    display: block; /* Garante que o link ocupe toda a largura do item da lista */
+  }
+  
   
   .sidebar-header {
     padding: 20px;
