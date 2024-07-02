@@ -1,0 +1,72 @@
+.edit-dialog-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem; 
+  
+    h2 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+    }
+  
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+    }
+  
+    input[type="text"] {
+      padding: 0.5rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      width: 100%; 
+    }
+  
+    // .task-input-group {
+    //   display: flex;
+    //   flex-direction: column; 
+    //   align-items: flex-start; 
+    //   margin-bottom: 0.5rem;
+  
+      .task-header {
+        flex: 1; 
+        display: flex;
+        align-items: center;
+        width: 100%; 
+        position: relative;
+  
+        label {
+          margin-bottom: 0; 
+        }
+
+        .button-delete {
+            position: absolute;
+            right: 20px; /* Ajuste conforme necessário */
+            // top: 10px;
+            background: none;
+            border: none;
+            cursor: pointer;
+          }
+          
+          .button-delete:hover {
+            color: #616161; /* Muda a cor ao passar o mouse */
+            transform: scale(1.1); /* Aumenta ligeiramente ao passar o mouse */
+          }
+          
+          .button-delete mat-icon {
+            color: #000000; /* Cor do ícone, ajuste conforme necessário */
+          }
+
+          .button-add { /* Estilização do botão adicionar */
+            background: none;
+            border: none;
+            cursor: pointer;
+            margin-left: 1rem; 
+        
+            mat-icon {
+              font-size: 1.2rem; 
+            }
+          }
+
+        }
+}
+    

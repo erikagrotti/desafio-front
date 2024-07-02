@@ -1,0 +1,32 @@
+<h2 mat-dialog-title>Editar Lista de Tarefas</h2>
+<mat-dialog-content class="edit-dialog-content">
+
+  <div>
+    <label for="listTitle">Título da Lista:</label>
+    <input type="text" id="listTitle" [(ngModel)]="taskGroup.listTitle" required>
+  </div>
+
+  <h3>Tarefas:</h3>
+  <div *ngFor="let task of taskGroup.tasks; let i = index" class="task-input-group">
+    <div class="task-header">
+      <label for="taskTitle{{i}}">Título da Tarefa {{i + 1}}:</label>
+      <button class="button-delete" (click)="deleteTask(i)">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </div>
+    <input type="text" id="taskTitle{{i}}" [(ngModel)]="task.title">
+  </div>
+
+  <div>
+    <label for="newTaskTitle">Nova Tarefa:</label>
+    <input type="text" id="newTaskTitle" [(ngModel)]="newTaskTitle">
+    <button class="button-add" (click)="addTask()">
+      <mat-icon>add</mat-icon>
+    </button>
+  </div>
+
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button (click)="onCancel()">Cancelar</button>
+  <button mat-button [mat-dialog-close]="taskGroup" cdkFocusInitial>Salvar</button>
+</mat-dialog-actions>

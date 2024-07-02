@@ -52,6 +52,7 @@
 .delete-button {
   position: absolute;
   right: 20px; /* Ajuste conforme necessário */
+  top: 10px;
   background: none;
   border: none;
   cursor: pointer;
@@ -63,5 +64,23 @@
 }
 
 .delete-button mat-icon {
+  color: #000000; /* Cor do ícone, ajuste conforme necessário */
+}
+
+.edit-button {
+  position: absolute;
+  right: 60px; /* Ajuste conforme necessário */
+  top: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.edit-button:hover {
+  color: #616161; /* Muda a cor ao passar o mouse */
+  transform: scale(1.1); /* Aumenta ligeiramente ao passar o mouse */
+}
+
+.edit-button mat-icon {
   color: #000000; /* Cor do ícone, ajuste conforme necessário */
 }

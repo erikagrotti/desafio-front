@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
-import { Task } from '../models/task.models'; 
+import { Task, TaskGroup } from '../models/task.models'; 
 
 @Injectable({
   providedIn: 'root',
@@ -16,27 +16,48 @@ export class TaskService {
     return this.http.get<any[]>(`${this.apiUrl}/items`)
       .pipe(
         map(data => {
-          console.log("Dados brutos do DynamoDB:", data); // <-- console.log fora do objeto
+          console.log("Dados brutos do DynamoDB:", data); 
           return data.map(item => ({
             listID: item.listID,
             taskID: item.taskID,
             title: item.title,
             status: item.status,
-            description: item.description
+            description: item.description || '' // Adicione uma descrição vazia se não existir
           }));
         })
       );
-      
   }
 
   updateTaskStatus(task: Task): Observable<any> {
-    const url = `${this.apiUrl}/items/${task.listID}/${task.taskID}`; // Incluir listID na URL
+    const url = `${this.apiUrl}/items/${task.listID}/${task.taskID}`;
     const body = { status: task.status }; 
     return this.http.patch(url, body, {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' })
     });
   }
 
+  editTaskList(updatedListData: TaskGroup): Observable<any> {
+    const url = `${this.apiUrl}/items`; 
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+  
+    const body = { 
+      listID: updatedListData.listID, // Inclua o listID no corpo
+      title: updatedListData.listTitle,
+      tasks: updatedListData.tasks.map(task => ({
+        taskID: task.taskID, 
+        title: task.title,
+        status: task.status
+      }))
+    };
+  
+    return this.http.patch(url, body, { headers }); // Use PATCH para atualizar
+  }
+
+  deleteTask(listID: number, taskID: string): Observable<any> {
+    const url = `${this.apiUrl}/items/${listID}/${taskID}`; 
+    return this.http.delete(url); 
+  }
+    
   updateTasksStatus(listID: number, tasks: any[]): Observable<any> {
     const url = `${this.apiUrl}/items/${listID}/status`;
     return this.http.patch(url, { tasks: tasks }, { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) });
@@ -49,22 +70,19 @@ export class TaskService {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' })
     });
   }
+
   createTask(task: Task): Observable<any> {
-    const url = `${this.apiUrl}/items`; // Rota para criar um novo item (tarefa)
+    const url = `${this.apiUrl}/items`; 
     return this.http.post(url, task, { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) });
   }
 
-  // Cria várias tarefas (filhas)
   createTasks(tasks: Task[]): Observable<any> {
-    // Você pode usar a rota /items (POST) para criar várias tarefas de uma vez
-    // ou criar uma nova rota na API para lidar com a criação em lote
     const url = `${this.apiUrl}/items`;
-    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     return this.http.post(url, { tasks }, { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) });
   }
 
   deleteTaskList(listID: number): Observable<any> {
-    const url = `${this.apiUrl}/items/${listID}`; // Adapte a URL para sua API
-    return this.http.delete(url); // Ou o método HTTP adequado para sua API
+    const url = `${this.apiUrl}/items/${listID}`; 
+    return this.http.delete(url); 
   }
 }
