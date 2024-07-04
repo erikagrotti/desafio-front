@@ -1,51 +1,60 @@
-<app-defauld-login-layout
-    title="Sign in and start today!"
-    primaryBtnText="Signup Now"
-    secondBtnText="Login Now"
-    (submit)="submit()"
-    (navigate)="navigate()"
-    [disablePrimaryBtn]="!signupForm.valid"
->
-<form [formGroup]="signupForm">
-    <app-primary-input
-    formControlName="name"
-    inputName="name"
-    type="text"
-    label="Your name"
-    placeholder="username"
->
+<app-header></app-header>
+<div class="signup-container">
+  <div class="signup-box">
+    <h2>Cadastro</h2>
+    <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
+      <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
 
-    <img src="/assets/svg/logoemail.svg"/>
-</app-primary-input>
+      <div class="form-group">
+        <label for="email">Email:</label>
+        <input type="email" id="email" formControlName="email" required />
+        <div
+          *ngIf="signupForm.get('email')?.invalid && (signupForm.get('email')?.dirty || signupForm.get('email')?.touched)"
+          class="error-message"
+        >
+          Por favor, insira um endereço de email válido.
+        </div>
+      </div>
 
-    <app-primary-input
-        formControlName="email"
-        inputName="email"
-        type="email"
-        label="email"
-        placeholder="name@gmail.com"
-    >
+      <div class="form-group">
+        <label for="password">Senha:</label>
+        <input
+          type="password"
+          id="password"
+          formControlName="password"
+          required
+        />
+        <div
+          *ngIf="signupForm.get('password')?.invalid && (signupForm.get('password')?.dirty || signupForm.get('password')?.touched)"
+          class="error-message"
+        >
+          A senha deve ter no mínimo 8 caracteres.
+        </div>
+      </div>
 
-        <img src="/assets/svg/logoemail.svg"/>
-    </app-primary-input>
-    <app-primary-input
-    formControlName="password"
-    formName="password"
-    type="password"
-    label="Your password"
->
+      <div class="form-group">
+        <label for="confirmPassword">Confirmar Senha:</label>
+        <input
+          type="password"
+          id="confirmPassword"
+          formControlName="confirmPassword"
+          required
+        />
+        <div
+          *ngIf="signupForm.errors?.['passwordMismatch'] && (signupForm.get('confirmPassword')?.dirty || signupForm.get('confirmPassword')?.touched)"
+          class="error-message"
+        >
+          As senhas não coincidem.
+        </div>
+      </div>
 
-    <img src="/assets/svg/logocadeado.svg"/>
-</app-primary-input>
-<app-primary-input
-    formControlName="passwordConfirm"
-    formName="passwordConfirm"
-    type="password"
-    label="Confirm your password"
->
-
-    <img src="/assets/svg/logocadeado.svg"/>
-</app-primary-input>
-
-</form>
-</app-defauld-login-layout>
+      <button type="submit" class="btn-signup" [disabled]="!signupForm.valid">
+        Cadastrar
+      </button>
+    </form>
+    <p class="login-link">
+      Já possui uma conta? <button type="button" class="btn-login" (click)="goToLogin()">Faça login</button>
+    </p>
+  </div>
+</div>
+<app-footer></app-footer>

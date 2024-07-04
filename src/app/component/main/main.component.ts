@@ -7,6 +7,9 @@ import { Task } from '../../models/task.models';
 import { Observable, of} from 'rxjs';
 import { TaskService } from '../../services/task.service';
 import { TaskItemComponent } from '../task-item/task-item.component';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-main',
@@ -16,7 +19,10 @@ import { TaskItemComponent } from '../task-item/task-item.component';
     HeaderComponent,
     SidebarComponent,
     TaskListComponent,
-    TaskItemComponent
+    TaskItemComponent,
+    MatSidenavModule,
+    MatButtonModule,
+    MatIconModule
     
   ],
   templateUrl: './main.component.html',

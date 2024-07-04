@@ -1,14 +1,14 @@
 /* Estilização geral do componente */
 :host {
   display: block;
-  background-color: #f8f9fa;
+  background-color: #faedd4;
   padding: 1rem;
   border-radius: 0.5rem;
   box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
   width: 90%;
   height: fit-content;
   max-height: 70dvh;
-  overflow-y: scroll;
+  overflow-y: auto;
   margin: 2rem auto;
 }
 

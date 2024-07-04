@@ -11,8 +11,8 @@
         <mat-icon>edit</mat-icon>
       </button>
     </mat-list-item>
-    <mat-list *ngFor="let task of group.tasks">
-      <app-task-item [task]="task" (taskChange)="updateTaskStatus($event)">
+
+    <mat-list *ngFor="let task of group.tasks" class="task-list-item"> <app-task-item [task]="task" (taskChange)="updateTaskStatus($event)">
       </app-task-item>
     </mat-list>
 

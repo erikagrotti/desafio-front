@@ -1,0 +1,34 @@
+<div class="verification-container">
+  <form [formGroup]="verificationForm" (ngSubmit)="onSubmit()">
+    <div class="form-header">
+      <h2>Verificação de Email</h2>
+    </div>
+    <div *ngIf="successMessage" class="success-message">
+      {{ successMessage }}
+    </div>
+    <div *ngIf="errorMessage" class="error-message">
+      {{ errorMessage }}
+    </div>
+    <div>
+      <label for="email">Email:</label>
+      <input type="email" id="email" formControlName="email"  required> 
+    </div>
+    <div class="form-group">
+      <label for="verificationCode">Código de Verificação:</label>
+      <input
+        type="text"
+        id="verificationCode"
+        formControlName="verificationCode"
+        required
+      />
+    </div>
+    <button type="submit" class="submit-button">
+      Verificar Email
+    </button>
+    <p class="resend-link">
+      Não recebeu o código?
+      <br>
+      <a href="#" (click)="resendVerificationCode(); $event.preventDefault()">Reenviar código</a> 
+    </p>
+  </form>
+</div>

@@ -5,6 +5,9 @@ import { SignupComponent } from './component/signup/signup.component';
 import { MainComponent } from './component/main/main.component';
 // import {CreateTaskListComponent} from './component/create-task-list/create-task-list.component';
 import { MainCreatedComponent } from './component/main-created/main-created.component';
+import { EmailVerificationComponent } from './component/email-verification/email-verification.component';
+import { AuthGuard } from '../authGuard.service'; // Importe o AuthGuard
+
 
 export const routes: Routes = [
 {
@@ -17,10 +20,16 @@ export const routes: Routes = [
 },
 {
     path: "main",
-    component: MainComponent
+    component: MainComponent,
+    canActivate: [AuthGuard] // Adicione o AuthGuard aqui
 },
 {
     path: "created",
-    component: MainCreatedComponent
+    component: MainCreatedComponent,
+    canActivate: [AuthGuard] // Adicione o AuthGuard aqui
+},
+{
+    path: "autentification",
+    component: EmailVerificationComponent
 }
 ];

@@ -1,6 +1,16 @@
 <app-header></app-header>
-<main>
-    <app-sidebar></app-sidebar>
-    <app-create-task-list></app-create-task-list>
-</main>
+<mat-drawer-container class="main-container" autosize> 
+  <mat-drawer class="mat-drawer" #drawer mode="over" opened> <app-sidebar></app-sidebar>
+  </mat-drawer>
+
+  <mat-drawer-content> 
+    <main>
+      <button class="button-menu" (click)="drawer.toggle()">
+        <mat-icon class="icon">arrow_forward</mat-icon> <!-- Ícone de menu --> 
+      </button>
+      <app-create-task-list class="create_task"></app-create-task-list>
+    </main>
+  </mat-drawer-content>
+
+</mat-drawer-container>
 <app-footer></app-footer>

@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { DefauldLoginLayoutComponent } from './component/defauld-login-layout/defauld-login-layout.component';
+// import { DefauldLoginLayoutComponent } from './component/defauld-login-layout/defauld-login-layout.component';
 import { LoginComponent } from './component/login/login.component';
-import { PrimaryInputComponent } from './component/primary-input/primary-input.component';
+// import { PrimaryInputComponent } from './component/primary-input/primary-input.component';
 import {SignupComponent} from './component/signup/signup.component';
 import {MainComponent} from './component/main/main.component';
 import{ FooterComponent } from './component/footer/footer.component';
@@ -15,27 +15,34 @@ import {CreateTaskListComponent} from './component/create-task-list/create-task-
 import { FormsModule } from '@angular/forms';
 import {MainCreatedComponent} from './component/main-created/main-created.component'
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar'
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatButtonModule } from '@angular/material/button';
+import { CommonModule } from '@angular/common';
+import { AuthGuard } from '../authGuard.service';
 
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [
     RouterOutlet, 
-    DefauldLoginLayoutComponent, 
+    // DefauldLoginLayoutComponent, 
     LoginComponent, 
-    PrimaryInputComponent,
+    // PrimaryInputComponent,
     SignupComponent,
     MainComponent,
     FooterComponent,
     HeaderComponent,
-    SidebarComponent,
+    // SidebarComponent,
     TaskListComponent,
     MatCheckboxModule,
     TaskItemComponent,
     CreateTaskListComponent,
     FormsModule,
     MainCreatedComponent,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatSidenavModule,
+    MatButtonModule,
+    CommonModule
 ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'

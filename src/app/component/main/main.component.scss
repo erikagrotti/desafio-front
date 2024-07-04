@@ -1,11 +1,39 @@
 
 main {
   display: grid;
-  grid-template-columns: 0.25fr 1fr;
+  grid-template-columns: 100%;
   padding-top: 40px;
+  background-color: #FFFFF0;
   // justify-content: start;
   // align-items: center;
   // width: 100%;
-  // height: 100%;
+  height: calc(100vh - 64px)
+}
+/* main.component.css */
+// .main-container {
+//   height: calc(100vh - 64px); /* Altura total menos a altura do header (ajuste conforme necessário) */
 
+// }
+
+.button-menu{
+  width: 50px;
+  height: 50px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.button-menu:hover{
+  columns: rgb(8, 6, 6);
+  transform: scale(1.1);
+
+}
+
+.mat-drawer{
+  width: 20%;
+}
+
+
+.icon{
+  font-size: 30px;
 }

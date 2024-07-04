@@ -1,11 +1,15 @@
 import { Component } from '@angular/core';
-import { DefauldLoginLayoutComponent } from '../defauld-login-layout/defauld-login-layout.component';
+// import { DefauldLoginLayoutComponent } from '../defauld-login-layout/defauld-login-layout.component';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { PrimaryInputComponent } from '../primary-input/primary-input.component';
+// import { PrimaryInputComponent } from '../primary-input/primary-input.component';
 import { Router } from '@angular/router';
-import { LoginService } from '../../services/login.service';
-import { ToastrService } from 'ngx-toastr'; // Importe o ToastrService
-// import { AuthService } from '../../../auth.service';
+// import { LoginService } from '../../services/login.service';
+// import { ToastrService } from 'ngx-toastr'; // Importe o ToastrService
+import { AuthService } from '../../../auth.service';
+import { CommonModule } from '@angular/common';
+import { HeaderComponent } from '../header/header.component';
+import { FooterComponent } from '../footer/footer.component';
+// import { Routes } from '../../app.routes';
 
 interface LoginForm {
   email: FormControl<string | null>;
@@ -16,51 +20,51 @@ interface LoginForm {
   selector: 'app-login',
   standalone: true,
   imports: [
-    DefauldLoginLayoutComponent, 
     ReactiveFormsModule,
-    PrimaryInputComponent,
+    CommonModule,
+    HeaderComponent,
+    FooterComponent,
+
   ],
   providers: [
-    // AuthService
+    AuthService,
+    Router,
+    // Routes
+
   ],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent {
-  loginForm!: FormGroup<LoginForm>;
+  loginForm: FormGroup;
+  errorMessage: string = '';
 
-  constructor(
-    private router: Router,
-    private loginService: LoginService,
-    private toastService: ToastrService, // Injete o ToastrService
-    // private authService: AuthService
-  ) {
+  constructor(private authService: AuthService, private router: Router) { 
     this.loginForm = new FormGroup({
       email: new FormControl('', [Validators.required, Validators.email]),
-      password: new FormControl('', [Validators.required, Validators.minLength(6)])
+      password: new FormControl('', [Validators.required])
     });
   }
+
+  onSubmit() {
+    if (this.loginForm.valid) {
+      const { email, password } = this.loginForm.value;
+      this.authService.signIn(email, password)
+        .then(() => {
+          // Login bem-sucedido, redirecione o usuário ou faça outras ações.
+          console.log('Login realizado com sucesso!');
+        })
+        .catch(error => {
+          // Trate o erro de login, exiba uma mensagem para o usuário.
+          this.errorMessage = 'Erro ao realizar login. Verifique suas credenciais.';
+          console.error('Erro no login:', error);
+        });
+    } else {
+      this.errorMessage = 'Por favor, preencha todos os campos corretamente.';
+    }
+  }
+
+  goToSignup() {
+    this.router.navigate(['/signup']); 
+  }
 }
-  // submit() {
-  //   if (this.loginForm.invalid) {
-  //     return;
-  //   }
-    
-  //   const email = this.loginForm.value.email ?? '';
-  //   const password = this.loginForm.value.password ?? '';
-
-  //   this.authService.signIn(email, password)
-  //   .then( result =>{
-  //     this.toastService.success("Login feito com sucesso!");
-  //     console.log('Login sucessful', result);
-  //   })
-  //   .catch(err =>{
-  //     this.toastService.error("Erro inesperado! Tente novamente mais tarde");
-  //     console.log('Login failded', err);
-  //   })
-  // }
-
-//   navigate() {
-//     this.router.navigate(["/signup"]);
-//   }
-// }

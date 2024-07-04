@@ -1,31 +1,29 @@
-<app-defauld-login-layout
-    title="Login into your account"
-    primaryBtnText="Login Now"
-    secondBtnText="Signup Now"
->
-    <!-- (submit)="submit()"
-    (navigate)="navigate()" -->
+<app-header></app-header>
+<div class="login-container">
+  <div class="login-box">
+    <h2>Login</h2>
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
 
-<form [formGroup]="loginForm">
-    <app-primary-input
-    formControlName="email"
-    inputName="email"
-    type="email"
-    label="email"
-    placeholder="name@gmail.com"
->
+      <div class="form-group">
+        <label for="email">Email:</label>
+        <input type="email" id="email" formControlName="email" required />
+      </div>
+      <div class="form-group">
+        <label for="password">Senha:</label>
+        <input
+          type="password"
+          id="password"
+          formControlName="password"
+          required
+        />
+      </div>
+      <button type="submit" class="btn-login">Entrar</button>
+    </form>
+    <p class="signup-link">
+      Não tem conta? <button type="button" class="btn-signup" (click)="goToSignup()">Faça Cadastro</button>
+    </p>
 
-    <img src="/assets/svg/logoemail.svg">
-    </app-primary-input>
-    <app-primary-input
-    formControlName="password"
-    formName="password"
-    type="password"
-    label="Your password"
->
-    <img src="/assets/svg/logocadeado.svg">
-</app-primary-input>
-<span>Forgot password</span>
-</form>
-
-</app-defauld-login-layout>
+  </div>
+</div>
+<app-footer></app-footer>

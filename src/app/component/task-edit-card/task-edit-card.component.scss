@@ -56,17 +56,19 @@
             color: #000000; /* Cor do ícone, ajuste conforme necessário */
           }
 
+        }
           .button-add { /* Estilização do botão adicionar */
             background: none;
             border: none;
             cursor: pointer;
             margin-left: 1rem; 
+            
         
             mat-icon {
-              font-size: 1.2rem; 
+              font-size: 2rem; 
             }
           }
 
-        }
+        
 }
     

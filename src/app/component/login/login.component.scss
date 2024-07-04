@@ -1,16 +1,90 @@
-@import "../../../../src/styles/variables.scss";
+/* login.component.css */
+.login-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh; 
+  background-color: #f0f2f5;
+}
 
-form{
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-    margin-bottom: 34px;
 
-    span{
-        font-size: 14px;
-        text-decoration: underline;
-        color: $secundary-color;
-        text-align: end;
-    }
+.login-box {
+  background-color: white;
+  border-radius: 8px;
+  padding: 40px;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 80%; /* Largura máxima do formulário */
+  // flex-grow: 1;
+  overflow-y: auto;
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 30px;
+  color: #333; /* Cor escura para o título */
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+}
+
+input[type='email'],
+input[type='password'] {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.btn-login {
+  background-color: #4CAF50; /* Cor verde padrão */
+  color: white;
+  padding: 14px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  width: 100%;
+  transition: background-color 0.3s ease;
+  font-size: 16px;
+  margin-top: 20px; /* Espaçamento superior */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra suave */
+}
+
+.btn-login:hover {
+  background-color: #45a049; /* Cor verde mais escura no hover */
+}
+
+.signup-link{
+  text-align: center;
+  margin-top: 20px;
+}
+
+.btn-signup{
+  background-color: transparent;
+  border: none;
+  font-size: 16px;
+  color: #333;
+  text-decoration: underline;
+
+}
+
+.btn-signup:hover{
+  cursor: pointer;
+  color: red;
+}
+
+
+/* Estilo para botão desabilitado */
+.btn-login:disabled {
+  background-color: #cccccc; /* Cor cinza claro quando desabilitado */
+  cursor: not-allowed;
 }
