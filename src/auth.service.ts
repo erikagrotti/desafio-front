@@ -31,15 +31,16 @@ export class AuthService {
         Username: email,
         Password: password
       });
-
+  
       const userData = {
         Username: email,
         Pool: this.userPool
       };
-
-      const cognitoUser = new CognitoUser(userData);
-
-      cognitoUser.authenticateUser(authenticationDetails, { 
+  
+      // Crie o objeto CognitoUser e atribua à variável this.cognitoUser
+      this.cognitoUser = new CognitoUser(userData); 
+  
+      this.cognitoUser.authenticateUser(authenticationDetails, { 
         onSuccess: (result) => {
           this.storeSession(result);
           this.router.navigate(['/main']);
@@ -131,10 +132,18 @@ export class AuthService {
   }
 
   signOut(): void {
-    if (this.cognitoUser) {
-      this.cognitoUser.signOut();
-      localStorage.removeItem('accessToken');
+    console.log("Cheguei");
+    const currentUser = this.userPool.getCurrentUser();
+
+    if (currentUser) {
+      console.log("IF")
+      currentUser.signOut();
       this.router.navigate(['/login']);
+      localStorage.removeItem('accessToken');
+      console.log('Usuário deslogado com sucesso!');
+       window.location.reload();
+    } else {
+      console.warn('Nenhum usuário cognito encontrado');
     }
   }
 }

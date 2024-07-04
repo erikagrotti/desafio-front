@@ -18,7 +18,6 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar'
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
-import { AuthGuard } from '../authGuard.service';
 
 @Component({
   selector: 'app-root',

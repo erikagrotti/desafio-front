@@ -6,7 +6,7 @@ import { MainComponent } from './component/main/main.component';
 // import {CreateTaskListComponent} from './component/create-task-list/create-task-list.component';
 import { MainCreatedComponent } from './component/main-created/main-created.component';
 import { EmailVerificationComponent } from './component/email-verification/email-verification.component';
-import { AuthGuard } from '../authGuard.service'; // Importe o AuthGuard
+import { AuthGuard } from './auth.guard'; // Importe o AuthGuard
 
 
 export const routes: Routes = [
