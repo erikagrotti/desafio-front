@@ -3,7 +3,7 @@ main {
   display: grid;
   grid-template-columns: 100%;
   padding-top: 40px;
-  background-color: #FFFFF0;
+  background-color: #eaeaea;
   // justify-content: start;
   // align-items: center;
   // width: 100%;
@@ -24,7 +24,7 @@ main {
 }
 
 .button-menu:hover{
-  columns: rgb(8, 6, 6);
+  columns: rgb(255, 255, 255);
   transform: scale(1.1);
 
 }
@@ -36,4 +36,5 @@ main {
 
 .icon{
   font-size: 30px;
+  color: rgb(3, 3, 3);
 }

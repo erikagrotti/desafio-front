@@ -70,8 +70,11 @@ input[type='password'] {
 }
 
 .login-link {
+  display: flex;
+  justify-content: center;
   text-align: center;
   margin-top: 20px;
+  gap: 20px;
 }
 
 .btn-login{

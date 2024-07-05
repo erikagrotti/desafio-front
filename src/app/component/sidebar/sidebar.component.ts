@@ -1,30 +1,30 @@
-import { Component } from '@angular/core';
-import { AuthService } from '../../../auth.service';
+import { Component, OnInit, ChangeDetectorRef, AfterViewChecked } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-sidebar',
   standalone: true,
   imports: [
     CommonModule,
+    RouterModule
   ],
   templateUrl: './sidebar.component.html',
-  styleUrl: './sidebar.component.scss'
+  styleUrls: ['./sidebar.component.scss']
 })
+export class SidebarComponent implements OnInit, AfterViewChecked {
+  showLink: boolean = true;
 
-export class SidebarComponent {
+  constructor(private router: Router, private cdRef: ChangeDetectorRef) {}
 
-  public authService: AuthService;
-
-  constructor(authService: AuthService, private router: Router) { // Corrija a injeção aqui
-    this.authService = authService;
+  ngOnInit() {
+    this.showLink = this.router.url !== '/created'; 
   }
 
-  logout(): void {
-    if (confirm('Tem certeza que deseja sair?')) {
-      this.router.navigate(['/login']);
-      this.authService.signOut();
-    }
+  ngAfterViewChecked() {
+    // Verifica a URL e atualiza showLink após a verificação da view
+    this.showLink = this.router.url !== '/created';
+    this.cdRef.detectChanges();
   }
 }

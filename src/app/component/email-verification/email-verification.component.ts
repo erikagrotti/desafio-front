@@ -4,11 +4,13 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../../auth.service';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
+import { FooterComponent } from '../footer/footer.component';
+import { HeaderComponent } from '../header/header.component';
 
 @Component({
   selector: 'app-email-verification',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, FooterComponent, HeaderComponent],
   templateUrl: './email-verification.component.html',
   styleUrls: ['./email-verification.component.scss']
 })
@@ -38,38 +40,37 @@ export class EmailVerificationComponent {
 
   onSubmit() {
     if (this.verificationForm && this.verificationForm.valid) {
-      // Verifique se o formulário existe
       const { email, verificationCode } = this.verificationForm.value;
       this.authService.confirmSignUp(email, verificationCode)
         .then(() => {
           this.successMessage = 'Email verificado com sucesso!';
-          // Redirecionar para a página de login após um atraso
+          // Redirecionar para a página de autentificação após um atraso
           setTimeout(() => {
-            this.router.navigate(['/login']);
-          }, 3000);
+            this.successMessage = 'Redirecionando para a tela de login...';
+            setTimeout(() => {
+              this.router.navigate(['/login']);
+            }, 2000); // Redireciona para a tela de login após 2 segundos
+          }, 3000); // Mostra a mensagem de sucesso por 3 segundos
         })
         .catch(error => {
           this.errorMessage = 'Erro ao verificar email. Verifique o código informado.';
           console.error('Erro na verificação de email:', error);
         });
     } else {
-      this.errorMessage = 'Por favor, investigue todos os campos.';
+      this.errorMessage = 'Por favor, preencha todos os campos corretamente.';
     }
   }
 
   resendVerificationCode() {
     if (this.verificationForm) {
-      // Verifica se o formulário existe
-      // Validação do email do formulário
       if (this.verificationForm.get('email')?.valid) {
         const email = this.verificationForm.get('email')?.value;
-        // Obtenha o valor do formulário
         this.authService.resendVerificationCode(email)
           .then(() => {
             console.log('Código de verificação reenviado com sucesso!');
-            this.errorMessage = 'Código de verificação reenviado!';
+            this.successMessage = 'Código de verificação reenviado!';
             setTimeout(() => {
-              this.errorMessage = '';
+              this.successMessage = '';
             }, 3000);
           })
           .catch(error => {

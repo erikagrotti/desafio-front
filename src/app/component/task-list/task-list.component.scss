@@ -1,5 +1,6 @@
 :host {
   display: block;
+  border-radius: 0.5rem;
   width: 90%;
   margin: 2rem auto;
   height: fit-content;
@@ -10,7 +11,7 @@
 }
 
 .task-list {
-  background-color: #FFFFF0; 
+  background-color: #F7F9F9; 
   padding: 20px;
   // border-radius: 5px;
   margin-bottom: 15px; 
@@ -29,7 +30,8 @@
   font-size: 20px;
   font-weight: bold;
   font-style: italic;
-  background-color: #faedd4; 
+  background-color: #c3b1bf; 
+  border-radius: 0.5rem;
   // color: #F5DEB3;
   padding: 10px;
   // border-bottom: 1px solid rgb(33, 2, 25);
@@ -50,7 +52,7 @@
   // margin: 20px auto;
   // padding: 20px 20px 20px;
   // border-radius: 30px;
-  background-color: 	#f8f8e3;
+  background-color: #fafafa;
   height: 100%;
   // border-radius: 0.5rem;
   margin: 0 aut;
@@ -74,7 +76,7 @@
 }
 
 .delete-button mat-icon {
-  color: #000000; 
+  color: #361963; 
 }
 
 .edit-button {
@@ -84,6 +86,7 @@
   background: none;
   border: none;
   cursor: pointer;
+  
 }
 
 .edit-button:hover {
@@ -92,5 +95,5 @@
 }
 
 .edit-button mat-icon {
-  color: #000000;
+  color: #361963;
 }

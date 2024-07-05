@@ -1,7 +1,7 @@
 /* Estilização geral do componente */
 :host {
   display: block;
-  background-color: #faedd4;
+  background-color: #F7F9F9;
   padding: 1rem;
   border-radius: 0.5rem;
   box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
@@ -10,6 +10,7 @@
   max-height: 70dvh;
   overflow-y: auto;
   margin: 2rem auto;
+  
 }
 
 /* Título principal */
@@ -45,30 +46,30 @@ input[type="text"] {
     font-size: 1rem;
 
     &.primary {
-      background-color: #0c1217;
-      color: #fff;
+      background-color: #361963;
+      color: aliceblue;
 
       &:hover:not(:disabled) {
-        filter: brightness(70%);
+        background-color: #9b9ecc;
       }
       
       &:disabled {
-        background-color: #080f16;
+        background-color: #9b9ecc;
         cursor: not-allowed;
       }
     }
 
     &.secondary {
-      background-color: #05080b;
+      background-color: #361963;
       color: #fff;
 
       &:hover:not(:disabled) {
-        filter: brightness(90%);
+        background-color: #9b9ecc;
       }
     }
 
     &:disabled {
-      background-color: #474b50;
+      background-color: #9b9ecc;
     }
   }
 
@@ -93,6 +94,7 @@ input[type="text"] {
 .button-delete { 
   border: none;
   background-color: transparent;
+  color: #361963;
   
   &:hover{
     color: #0f0c0c; /* Muda a cor ao passar o mouse */

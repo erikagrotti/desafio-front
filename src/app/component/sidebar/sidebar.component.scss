@@ -1,42 +1,54 @@
 .sidebar {
   // display: inline-block;
-    background-color: #faedd4;
-    color: #fff;
+    background-color: #9264aa;
+    color: #fffbfb;
     width: 100%;
     height: 100%;
+    border: none !important;
   }
   .menu li a {
     /* ... seus outros estilos ... */
     display: block; /* Garante que o link ocupe toda a largura do item da lista */
+    border: none !important;
   }
   
   
   .sidebar-header {
     padding: 20px;
-    border-bottom: none;
-  }
-  
-  .menu {
-    list-style-type: none;
-    padding: 0;
+    border: none !important;
+
   }
   
   .menu li {
-    padding: 10px 20px;
+    display: flex;
+    justify-content: center;
+    padding: 20px 20px;
     border-bottom: none;
+    text-decoration: underline;
+    // border: solid black 2px;
+    font-size: 18px;
+    // align-items: center;
   }
   
-  .menu li:last-child {
-    border-bottom: none;
-  }
   
   .menu li a {
-    color: #8B4513;
+    color: #fdfcfc;
     text-decoration: none;
+    outline: none;
     display: block;
+    border:  solid black 3px;
   }
   
   .menu li a:hover {
-    background-color: #faf7f7;
+    transform: scale(1.1);
+    border: none !important;
+    // text-decoration: underline;
   }
+  // .criar{
+  //   border-style: none;
+  //   border: none;
+  // }
+
+  
+
   

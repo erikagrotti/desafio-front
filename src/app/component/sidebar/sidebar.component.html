@@ -3,9 +3,8 @@
     <!-- <h3>Menu Lateral</h3> -->
   </div>
   <ul class="menu">
-    <li><a href="/created" style="display: block;">Criar nova lista</a></li>
-    <li>
-      <button (click)="logout()">Sair</button>
+    <li class="criar" *ngIf="showLink">
+      <a [routerLink]="'/created'" style="display: block;">Criar nova lista</a>
     </li>
   </ul>
 </aside>

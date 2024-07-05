@@ -4,8 +4,8 @@ body {
   }
   
   .header {
-    background-color: 	#faedd4;
-    color: 	#8B4513;
+    background-color: 	#9264aa;
+    color: 	#fcfafa;
     // color: #867878;
     padding: 10px 20px;
     top: 0;
@@ -22,29 +22,16 @@ body {
   }
   
   .logo a {
-    color: 	#8B4513;
+    color: 	#f7f3f3;
     font-size: 24px;
     text-decoration: none;
   }
   
-  .nav-links {
-    list-style-type: none;
-    padding: 0;
-    display: flex;
+  .button-logout{
+    background-color: transparent;
+    color: #fcfafa;
+    border: none;
   }
-  
-  .nav-links li {
-    margin-right: 10px;
+  .button-logout:hover{
+    transform: scale(1.1);
   }
-  
-  .nav-links li a {
-    color: #8B4513;
-    text-decoration: none;
-    font-size: 16px;
-  }
-  
-  .nav-links li a:hover {
-    text-decoration: underline;
-  }
-  
- 

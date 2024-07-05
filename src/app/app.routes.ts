@@ -31,5 +31,8 @@ export const routes: Routes = [
 {
     path: "autentification",
     component: EmailVerificationComponent
+},
+{ path: '', redirectTo: '/main', 
+    pathMatch: 'full' 
 }
 ];

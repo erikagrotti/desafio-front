@@ -3,7 +3,7 @@ main {
     display: grid;
     grid-template-columns: 100%;
     padding-top: 40px;
-    background-color: #FFFFF0;
+    background-color: #eaeaea;
     // justify-content: start;
     // align-items: center;
     // width: 100%;
@@ -31,5 +31,6 @@ main {
   
   
   .icon{
+    color: rgb(2, 2, 2);
     font-size: 30px;
   }

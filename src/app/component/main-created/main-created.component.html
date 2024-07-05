@@ -1,6 +1,7 @@
 <app-header></app-header>
 <mat-drawer-container class="main-container" autosize> 
-  <mat-drawer class="mat-drawer" #drawer mode="over" opened> <app-sidebar></app-sidebar>
+  <mat-drawer class="mat-drawer" #drawer mode="over" opened> 
+    <app-sidebar *ngIf="showSidebar"></app-sidebar> 
   </mat-drawer>
 
   <mat-drawer-content> 

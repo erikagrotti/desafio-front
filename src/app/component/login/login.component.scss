@@ -64,8 +64,11 @@ input[type='password'] {
 }
 
 .signup-link{
+  display: flex;
+  justify-content: center;
   text-align: center;
   margin-top: 20px;
+  gap: 20px;
 }
 
 .btn-signup{
@@ -87,4 +90,24 @@ input[type='password'] {
 .btn-login:disabled {
   background-color: #cccccc; /* Cor cinza claro quando desabilitado */
   cursor: not-allowed;
+}
+
+.success-message {
+  background-color: #d4edda;
+  border-color: #c3e6cb;
+  color: #155724;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+}
+
+.error-message {
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
+  color: #721c24;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid transparent;
+  border-radius: 4px;
 }

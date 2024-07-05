@@ -8,6 +8,7 @@ import {
 } from 'amazon-cognito-identity-js';
 import { environment } from '../src/environments/environments.prod';
 import { Router } from '@angular/router';
+import { Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -16,6 +17,8 @@ export class AuthService {
 
   private userPool: CognitoUserPool;
   private cognitoUser: CognitoUser | null = null;
+  private authSubject = new Subject<boolean>(); // Crie o Subject
+  authStatus$ = this.authSubject.asObservable(); // Crie o Observable
 
   constructor(private router: Router) {
     const poolData = {
@@ -23,6 +26,9 @@ export class AuthService {
       ClientId: environment.aws.clientId
     };
     this.userPool = new CognitoUserPool(poolData);
+
+    // Correção: Mova esta linha para dentro do construtor
+    this.authSubject.next(this.isAuthenticated()); 
   }
 
   signIn(email: string, password: string): Promise<void> {
@@ -136,12 +142,15 @@ export class AuthService {
     const currentUser = this.userPool.getCurrentUser();
 
     if (currentUser) {
-      console.log("IF")
+      console.log("IF");
       currentUser.signOut();
       this.router.navigate(['/login']);
       localStorage.removeItem('accessToken');
       console.log('Usuário deslogado com sucesso!');
-       window.location.reload();
+      window.location.reload();
+
+      // Emita o novo estado de autenticação (false para deslogado)
+      this.authSubject.next(false); 
     } else {
       console.warn('Nenhum usuário cognito encontrado');
     }
