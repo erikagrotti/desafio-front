@@ -100,11 +100,23 @@ export class AuthService {
           return;
         }
         console.log('Cadastro confirmado com sucesso:', result);
-        this.cognitoUser = cognitoUser; 
-        resolve(); // Resolve a promessa
+        this.cognitoUser = cognitoUser;
+        resolve();
+        console.log('Redirecionando para a tela de login...');
+        this.router.navigate(['/login']).then(success => {
+          if (success) {
+            console.log('Navegação para /login bem-sucedida.');
+          } else {
+            console.error('Navegação para /login falhou.');
+          }
+        }).catch((error) => {
+          console.error('Erro ao redirecionar:', error);
+        });
       });
     });
   }
+  
+  
   
   resendVerificationCode(email: string): Promise<void> {
     return new Promise((resolve, reject) => {

@@ -44,11 +44,17 @@ export class EmailVerificationComponent {
       this.authService.confirmSignUp(email, verificationCode)
         .then(() => {
           this.successMessage = 'Email verificado com sucesso!';
-          // Redirecionar para a página de autentificação após um atraso
+          console.log('Email verificado com sucesso. Preparando para redirecionar...');
+          // Redirecionar para a página de autenticação após um atraso
           setTimeout(() => {
             this.successMessage = 'Redirecionando para a tela de login...';
+            console.log('Redirecionando para a tela de login...');
             setTimeout(() => {
-              this.router.navigate(['/login']);
+              this.router.navigate(['/login']).then(() => {
+                console.log('Redirecionado para a tela de login.');
+              }).catch((error) => {
+                console.error('Erro ao redirecionar:', error);
+              });
             }, 2000); // Redireciona para a tela de login após 2 segundos
           }, 3000); // Mostra a mensagem de sucesso por 3 segundos
         })
@@ -60,6 +66,7 @@ export class EmailVerificationComponent {
       this.errorMessage = 'Por favor, preencha todos os campos corretamente.';
     }
   }
+  
 
   resendVerificationCode() {
     if (this.verificationForm) {

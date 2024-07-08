@@ -8,7 +8,6 @@ import { MainCreatedComponent } from './component/main-created/main-created.comp
 import { EmailVerificationComponent } from './component/email-verification/email-verification.component';
 import { AuthGuard } from './auth.guard'; // Importe o AuthGuard
 
-
 export const routes: Routes = [
 {
     path: "login",
