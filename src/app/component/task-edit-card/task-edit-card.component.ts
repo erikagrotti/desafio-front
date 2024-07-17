@@ -1,6 +1,5 @@
 import { Component, Inject, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { TaskGroup } from '../../models/task.models';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -9,9 +8,10 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule } from '@angular/material/dialog';
-import { Task } from '../../models/task.models';
 import { TaskService } from '../../services/task.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Task, TaskGroup } from '../../models/task.models';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-task-edit-card',
@@ -27,10 +27,10 @@ import { MatSnackBar } from '@angular/material/snack-bar';
     MatDialogModule
   ],
   templateUrl: './task-edit-card.component.html',
-  styleUrl: './task-edit-card.component.scss'
+  styleUrls: ['./task-edit-card.component.scss']
 })
 export class TaskEditCardComponent implements OnInit {
-  @Input() taskGroup: TaskGroup; // taskGroup deve ser inicializado no construtor
+  @Input() taskGroup: TaskGroup;
   @Output() save = new EventEmitter<TaskGroup>();
   newTaskTitle: string = '';
 
@@ -40,53 +40,108 @@ export class TaskEditCardComponent implements OnInit {
     private taskService: TaskService,
     private snackBar: MatSnackBar
   ) {
-    this.taskGroup = { ...data }; // Inicializa taskGroup com os dados recebidos
+    this.taskGroup = data;
   }
 
   ngOnInit(): void {
-    // A verificação de taskGroup.tasks não é mais necessária aqui
   }
 
   addTask() {
     if (this.newTaskTitle.trim() !== '') {
+      const newTaskID = this.generateNewTaskID();
       this.taskGroup.tasks.push({
         listID: this.taskGroup.listID,
-        taskID: this.generateTaskId(),
+        taskID: newTaskID,
         title: this.newTaskTitle,
-        status: false
+        status: 'pendente',
       });
       this.newTaskTitle = '';
     }
   }
 
-  deleteTask(index: number) {
-    const taskToDelete = this.taskGroup.tasks[index];
-    const listID = this.taskGroup.listID; 
-    const taskID = taskToDelete.taskID;
-  
-    if (confirm('Tem certeza que deseja excluir esta tarefa?')) { // Confirmação para a tarefa
-      this.taskService.deleteTask(listID, taskID) 
-        .subscribe(
-          () => {
-            console.log('Tarefa excluída com sucesso do backend!');
-            this.taskGroup.tasks.splice(index, 1); 
-            this.snackBar.open('Tarefa excluída com sucesso!', 'Fechar', { duration: 3000 });
-          },
-          error => {
-            console.error('Erro ao excluir tarefa do backend:', error);
-            this.snackBar.open('Erro ao excluir tarefa.', 'Fechar', { duration: 5000 });
-          }
-        );
+  generateNewTaskID(): string {
+    const maxTaskID = this.taskGroup.tasks.reduce((max, task) => {
+      const taskNumber = parseInt(task.taskID.replace('T', ''), 10);
+      return taskNumber > max ? taskNumber : max;
+    }, 0);
+    return `T${(maxTaskID + 1).toString().padStart(3, '0')}`;
+  }
+
+  // toggleTaskStatus(task: Task) {
+  //   const newStatus = task.status === 'pendente' ? 'concluido' : 'pendente';
+  //   this.taskService.updateTaskStatus(this.taskGroup.listID, task.taskID, newStatus).subscribe({
+  //     next: () => {
+  //       task.status = newStatus;
+  //       this.checkIfAllTasksCompleted();
+  //     },
+  //     error: (error: HttpErrorResponse) => {
+  //       console.error('Erro ao atualizar o status da tarefa:', error);
+  //       this.snackBar.open('Erro ao atualizar o status da tarefa.', 'Fechar', { duration: 5000 });
+  //     }
+  //   });
+  // }
+
+  // checkIfAllTasksCompleted() {
+  //   const allTasksCompleted = this.taskGroup.tasks.every(task => task.status === 'concluido');
+  //   const newStatus = allTasksCompleted ? 'concluido' : 'pendente';
+  //   if (newStatus !== this.taskGroup.listStatus) {
+  //     this.taskService.updateListStatus(this.taskGroup.listID, newStatus).subscribe({
+  //       next: () => {
+  //         this.taskGroup.listStatus = newStatus;
+  //       },
+  //       error: (error: HttpErrorResponse) => {
+  //         console.error('Erro ao atualizar o status da lista:', error);
+  //         this.snackBar.open('Erro ao atualizar o status da lista.', 'Fechar', { duration: 5000 });
+  //       }
+  //     });
+  //   }
+  // }
+
+  confirmDeleteTask(task: Task, listID: string) {
+    if (confirm(`Tem certeza que deseja excluir a tarefa: ${task.title}?`)) {
+      this.deleteTask(task, listID);
     }
   }
 
-  private generateTaskId(): string {
-    return `T${Date.now()}`;
+  deleteTask(task: Task, listID: string) {
+    this.taskService.deleteTask(listID, task.taskID).subscribe({
+      next: () => {
+        console.log('Tarefa excluída com sucesso!');
+        this.snackBar.open('Tarefa excluída com sucesso!', 'Fechar', { duration: 3000 });
+        this.taskGroup.tasks = this.taskGroup.tasks.filter(t => t.taskID !== task.taskID);
+      },
+      error: (error: HttpErrorResponse) => {
+        console.error('Erro ao excluir tarefa:', error);
+        this.snackBar.open('Erro ao excluir a tarefa.', 'Fechar', { duration: 5000 });
+      },
+    });
   }
 
   onSave() {
-    this.dialogRef.close(this.taskGroup);
-    this.save.emit(this.taskGroup);
+    if (this.taskGroup) {
+      const existingTasks = this.taskGroup.tasks.filter(task => task.taskID !== '');
+      const newTasks = this.taskGroup.tasks.filter(task => task.taskID === '');
+
+      const data: TaskGroup = {
+        listID: this.taskGroup.listID,
+        listTitle: this.taskGroup.listTitle,
+        listStatus: this.taskGroup.listStatus,
+        tasks: existingTasks.concat(newTasks)
+      };
+
+      this.taskService.editTaskList(this.taskGroup).subscribe(
+        () => {
+          console.log('Lista de tarefas atualizada com sucesso!');
+          this.snackBar.open('Lista de tarefas atualizada com sucesso!', 'Fechar', { duration: 3000 });
+          this.dialogRef.close(this.taskGroup);
+          this.save.emit(this.taskGroup);
+        },
+        error => {
+          console.error('Erro ao atualizar a lista de tarefas:', error);
+          this.snackBar.open('Erro ao atualizar a lista de tarefas.', 'Fechar', { duration: 5000 });
+        }
+      );
+    }
   }
 
   onCancel() {

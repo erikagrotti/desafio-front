@@ -1,16 +1,24 @@
 <app-header></app-header>
-<mat-drawer-container class="main-container" autosize> 
-  <mat-drawer class="mat-drawer" #drawer mode="over" opened> <app-sidebar></app-sidebar>
+<mat-drawer-container class="main-container" autosize>
+  <mat-drawer class="mat-drawer" #drawer mode="over" opened>
+    <app-sidebar></app-sidebar>
   </mat-drawer>
 
-  <mat-drawer-content> 
+  <mat-drawer-content>
     <main>
       <button class="button-menu" (click)="drawer.toggle()">
-        <mat-icon class="icon">arrow_forward</mat-icon> <!-- Ícone de menu --> 
+        <mat-icon class="icon">arrow_forward</mat-icon> <!-- Ícone de menu -->
       </button>
-      <app-task-list class="task-list"></app-task-list>
+
+      <!-- Verifica se há listas de tarefas antes de exibir o componente de lista -->
+      <app-task-list *ngIf="(taskGroups$ | async)?.length ?? 0 > 0" class="task-list"></app-task-list>
+
+      <!-- Exibe a criação de nova lista se não houver listas de tarefas -->
+      <!-- <div *ngIf="(taskGroups$ | async)?.length ?? 0 === 0">
+        <input [(ngModel)]="newTaskListName" placeholder="Nova Lista de Tarefas" />
+        <button (click)="createTaskList()">Criar Lista</button>
+      </div> -->
     </main>
   </mat-drawer-content>
-
 </mat-drawer-container>
 <app-footer></app-footer>

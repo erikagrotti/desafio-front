@@ -19,6 +19,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
 
+
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -41,7 +42,8 @@ import { CommonModule } from '@angular/common';
     MatSnackBarModule,
     MatSidenavModule,
     MatButtonModule,
-    CommonModule
+    CommonModule,
+    
 ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'

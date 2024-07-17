@@ -1,25 +1,30 @@
-<div class="list_container">
-  <mat-list *ngFor="let group of (taskGroups$ | async)"> 
-    <mat-list-item [ngClass]="{'parent-task': true}">
-      <mat-checkbox [checked]="group.listStatus" (change)="updateListStatus(group)">
-        {{ group.listTitle }}
-      </mat-checkbox>
-      <button class="delete-button" (click)="deleteTaskList(group.listID)">
-        <mat-icon>delete</mat-icon>
-      </button>
-      <button class="edit-button" (click)="editTaskList(group)">
+<mat-list *ngFor="let group of (taskGroups$ | async)">
+  <mat-list-item [ngClass]="{'parent-task': true}">
+    <mat-checkbox [checked]="group.listStatus === 'concluido'" (change)="updateListStatus(group)">
+      {{ group.listTitle }}
+    </mat-checkbox>
+
+    <div class="button-group">
+      <button mat-icon-button class="edit-button" (click)="editTaskList(group)">
         <mat-icon>edit</mat-icon>
       </button>
-    </mat-list-item>
+      <button mat-icon-button class="delete-button" (click)="deleteTaskList(group.listID)">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </div>
+  </mat-list-item>
 
-    <mat-list *ngFor="let task of group.tasks" class="task-list-item"> <app-task-item [task]="task" (taskChange)="updateTaskStatus($event)">
+  <!-- Verifique se há tarefas antes de renderizar a lista -->
+  <div *ngIf="group.tasks.length === 0">
+    <p>Nenhuma tarefa encontrada.</p>
+  </div>
+
+  <mat-list *ngIf="group.tasks.length > 0">
+    <mat-list-item *ngFor="let task of group.tasks" class="task-list-item">
+      <app-task-item
+          [task]="task"
+          (statusChange)="updateTaskStatus(task, group.listID)">
       </app-task-item>
-    </mat-list>
-
-    <app-task-edit-card *ngIf="editingTaskGroup" 
-                        [taskGroup]="editingTaskGroup" 
-                        (save)="saveTaskListChanges($event)" 
-                        (cancel)="cancelTaskListEdit()">
-    </app-task-edit-card>
-  </mat-list> 
-</div>
+    </mat-list-item>
+  </mat-list>
+</mat-list>

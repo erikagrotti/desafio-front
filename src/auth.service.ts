@@ -4,11 +4,13 @@ import {
   CognitoUser,
   AuthenticationDetails,
   CognitoUserAttribute,
-  ISignUpResult
+  ISignUpResult,
+  CognitoRefreshToken
 } from 'amazon-cognito-identity-js';
 import { environment } from '../src/environments/environments.prod';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -19,15 +21,16 @@ export class AuthService {
   private cognitoUser: CognitoUser | null = null;
   private authSubject = new Subject<boolean>(); // Crie o Subject
   authStatus$ = this.authSubject.asObservable(); // Crie o Observable
+  // private lambdaEndpoint = environment.aws.urlLambda; // URL do seu Lambda
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private http: HttpClient) {
     const poolData = {
       UserPoolId: environment.aws.userPoolId,
-      ClientId: environment.aws.clientId
+      ClientId: environment.aws.clientId,
     };
     this.userPool = new CognitoUserPool(poolData);
 
-    // Correção: Mova esta linha para dentro do construtor
+    // Mova esta linha para dentro do construtor
     this.authSubject.next(this.isAuthenticated()); 
   }
 
@@ -43,13 +46,14 @@ export class AuthService {
         Pool: this.userPool
       };
   
-      // Crie o objeto CognitoUser e atribua à variável this.cognitoUser
       this.cognitoUser = new CognitoUser(userData); 
   
       this.cognitoUser.authenticateUser(authenticationDetails, { 
         onSuccess: (result) => {
-          this.storeSession(result);
+          // console.log(result)
+          this.storeSession(result.getAccessToken().getJwtToken());
           this.router.navigate(['/main']);
+          this.authSubject.next(true); // Emitir novo estado após login
           resolve();
         },
         onFailure: (err) => {
@@ -115,9 +119,7 @@ export class AuthService {
       });
     });
   }
-  
-  
-  
+
   resendVerificationCode(email: string): Promise<void> {
     return new Promise((resolve, reject) => {
       const cognitoUser = this.cognitoUser || new CognitoUser({
@@ -138,11 +140,49 @@ export class AuthService {
   }
 
   private storeSession(authResult: any): void {
-    localStorage.setItem('accessToken', authResult.accessToken.jwtToken);
+    // const accessToken = authResult.accessToken.jwtToken;
+    // const idToken = authResult.idToken.jwtToken;
+    // const refreshToken = authResult.refreshToken.jwtToken;
+    // localStorage.setItem('accessToken', accessToken);
+    // localStorage.setItem('idToken', idToken);
+    // localStorage.setItem('refreshToken', refreshToken);
+    localStorage.setItem("accessToken", authResult)
   }
 
+  
   getAccessToken(): string | null {
-    return localStorage.getItem('accessToken');
+    const accessToken = localStorage.getItem('accessToken');
+
+    return accessToken;
+  }
+
+  private async renewToken(): Promise<void> {
+  const refreshTokenString = localStorage.getItem('refreshToken');
+
+  if (refreshTokenString) {
+    try {
+      const cognitoUser = this.userPool.getCurrentUser();
+
+      if (cognitoUser) {
+        const refreshToken = new CognitoRefreshToken({ 
+          // Corrigindo a propriedade para "RefreshToken"
+          RefreshToken: refreshTokenString 
+        }); 
+        await cognitoUser.refreshSession(refreshToken, (err, session) => { 
+            if (err) {
+              console.error('Erro ao renovar token:', err);
+            } else {
+              this.storeSession(session);
+              this.authSubject.next(true);
+            }
+          });
+        } else {
+          console.warn('Nenhum usuário cognito encontrado');
+        }
+      } catch (error) {
+        console.error('Erro ao renovar token:', error);
+      }
+    }
   }
 
   isAuthenticated(): boolean {
@@ -160,9 +200,7 @@ export class AuthService {
       localStorage.removeItem('accessToken');
       console.log('Usuário deslogado com sucesso!');
       window.location.reload();
-
-      // Emita o novo estado de autenticação (false para deslogado)
-      this.authSubject.next(false); 
+      this.authSubject.next(false); // Emita o novo estado de autenticação (false para deslogado)
     } else {
       console.warn('Nenhum usuário cognito encontrado');
     }

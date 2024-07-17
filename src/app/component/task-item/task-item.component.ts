@@ -12,28 +12,12 @@ standalone: true,
 imports: [CommonModule, MatCheckboxModule, FormsModule, MatListModule],
 })
 export class TaskItemComponent {
-@Input() task!: Task;
-@Output() taskChange = new EventEmitter<Task>();
+  @Input() task!: Task;
+  @Input() listID!: string; 
+  @Output() statusChange = new EventEmitter<{ task: Task, listID: string }>();
 
-updateStatus(completed: boolean, index?: number) {
-  if (index !== undefined && this.task.subtasks) {
-    this.task.subtasks[index].status = completed;
-    // Atualiza o estado da tarefa pai (verificação se todos os filhos estão completos)
-    this.task.status = this.task.subtasks.every(t => t.status);
-  } else {
-    this.task.status = completed;
-    this.taskChange.emit(this.task);
-    // Atualiza o estado de todos os filhos (se a tarefa pai for marcada)
-    this.task.subtasks?.forEach(t => (t.status = completed));
+  updateTaskStatus(completed: boolean) {
+    this.task.status = completed ? 'concluido' : 'pendente';
+    this.statusChange.emit({ task: this.task, listID: this.listID }); 
   }
-  this.taskChange.emit(this.task);
-}
-
-
-isIndeterminate(): boolean {
-  return !!this.task.subtasks &&
-    this.task.subtasks.some(t => t.status) &&
-    !this.task.subtasks.every(t => t.status);
-}
-
 }

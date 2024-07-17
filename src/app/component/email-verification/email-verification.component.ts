@@ -45,14 +45,18 @@ export class EmailVerificationComponent {
         .then(() => {
           this.successMessage = 'Email verificado com sucesso!';
           console.log('Email verificado com sucesso. Preparando para redirecionar...');
-          // Redirecionar para a página de autenticação após um atraso
+          // Redirecionar para a página de autentificação após um atraso
           setTimeout(() => {
             this.successMessage = 'Redirecionando para a tela de login...';
             console.log('Redirecionando para a tela de login...');
             setTimeout(() => {
-              this.router.navigate(['/login']).then(() => {
-                console.log('Redirecionado para a tela de login.');
-              }).catch((error) => {
+              this.router.navigate(['/main']).then(success => {
+                if (success) {
+                  console.log('Navegação para /login bem-sucedida.');
+                } else {
+                  console.error('Navegação para /login falhou.');
+                }
+              }).catch(error => {
                 console.error('Erro ao redirecionar:', error);
               });
             }, 2000); // Redireciona para a tela de login após 2 segundos
@@ -66,6 +70,7 @@ export class EmailVerificationComponent {
       this.errorMessage = 'Por favor, preencha todos os campos corretamente.';
     }
   }
+
   
 
   resendVerificationCode() {
