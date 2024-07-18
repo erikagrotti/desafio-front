@@ -16,7 +16,6 @@ import { HeaderComponent } from '../header/header.component';
 })
 export class EmailVerificationComponent {
   verificationForm: FormGroup = new FormGroup({
-    email: new FormControl('', [Validators.required, Validators.email]),
     verificationCode: new FormControl('', [Validators.required])
   });
   errorMessage: string = '';
@@ -31,36 +30,28 @@ export class EmailVerificationComponent {
     // Extraia o email da URL
     this.route.queryParams.subscribe(params => {
       this.email = params['email'] || '';
-      if (this.email) {
-        // Atualiza o valor do campo de email no formulário
-        this.verificationForm.patchValue({ email: this.email });
-      }
+      console.log('Email extraído dos parâmetros:', this.email);
     });
   }
 
   onSubmit() {
     if (this.verificationForm && this.verificationForm.valid) {
-      const { email, verificationCode } = this.verificationForm.value;
-      this.authService.confirmSignUp(email, verificationCode)
+      const { verificationCode } = this.verificationForm.value;
+      
+      this.authService.confirmSignUp(this.email, verificationCode)
         .then(() => {
           this.successMessage = 'Email verificado com sucesso!';
           console.log('Email verificado com sucesso. Preparando para redirecionar...');
           // Redirecionar para a página de autentificação após um atraso
           setTimeout(() => {
-            this.successMessage = 'Redirecionando para a tela de login...';
+            
+            if (typeof window !== 'undefined') {
+              window.location.href = '/main'
+            }
             console.log('Redirecionando para a tela de login...');
-            setTimeout(() => {
-              this.router.navigate(['/main']).then(success => {
-                if (success) {
-                  console.log('Navegação para /login bem-sucedida.');
-                } else {
-                  console.error('Navegação para /login falhou.');
-                }
-              }).catch(error => {
-                console.error('Erro ao redirecionar:', error);
-              });
-            }, 2000); // Redireciona para a tela de login após 2 segundos
-          }, 3000); // Mostra a mensagem de sucesso por 3 segundos
+          
+          }, 2000); // Mostra a mensagem de sucesso por 2 segundos
+          // this.router.navigate(['/main']);
         })
         .catch(error => {
           this.errorMessage = 'Erro ao verificar email. Verifique o código informado.';
@@ -71,27 +62,22 @@ export class EmailVerificationComponent {
     }
   }
 
-  
-
   resendVerificationCode() {
-    if (this.verificationForm) {
-      if (this.verificationForm.get('email')?.valid) {
-        const email = this.verificationForm.get('email')?.value;
-        this.authService.resendVerificationCode(email)
-          .then(() => {
-            console.log('Código de verificação reenviado com sucesso!');
-            this.successMessage = 'Código de verificação reenviado!';
-            setTimeout(() => {
-              this.successMessage = '';
-            }, 3000);
-          })
-          .catch(error => {
-            console.error('Erro ao enviar código de verificação:', error);
-            this.errorMessage = 'Erro ao enviar código. Tente novamente mais tarde.';
-          });
-      } else {
-        this.errorMessage = 'Por favor, insira um endereço de email válido.';
-      }
+    if (this.email) {
+      this.authService.resendVerificationCode(this.email)
+        .then(() => {
+          console.log('Código de verificação reenviado com sucesso!');
+          this.successMessage = 'Código de verificação reenviado!';
+          setTimeout(() => {
+            this.successMessage = '';
+          }, 3000);
+        })
+        .catch(error => {
+          console.error('Erro ao enviar código de verificação:', error);
+          this.errorMessage = 'Erro ao enviar código. Tente novamente mais tarde.';
+        });
+    } else {
+      this.errorMessage = 'Por favor, insira um endereço de email válido.';
     }
   }
 }

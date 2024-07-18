@@ -75,71 +75,81 @@ export class TaskListComponent implements OnInit {
   }
 
   updateListStatus(group: TaskGroup): void {
-    const newStatus = group.listStatus === 'concluido' ? 'pendente' : 'concluido'; // Inverte o status
+  const newStatus = group.listStatus === 'concluido' ? 'pendente' : 'concluido'; // Inverte o status
 
-    // Atualiza o status da lista no backend
-    this.taskService.updateListStatus(group.listID, newStatus).subscribe(
-      () => {
-        console.log('Status da lista atualizado com sucesso!');
+  // Atualiza o status da lista no backend
+  this.taskService.updateListStatus(group.listID, newStatus).subscribe(
+    () => {
+      console.log('Status da lista atualizado com sucesso!');
 
-        // Atualiza o status de todos os filhos para corresponder ao pai
-        group.tasks.forEach(task => {
-          task.status = newStatus; 
-          this.updateTaskStatus(task, group.listID); // Passa o listID aqui
-        });
+      group.listStatus = newStatus;
 
-        // Atualiza o status do grupo no BehaviorSubject
-        group.listStatus = newStatus;
-        this.taskGroups$.next([...this.taskGroups$.getValue()]);
-      },
-      (error) => console.error('Erro ao atualizar status da lista:', error)
-    );
-  }
+      const tasksObservables = group.tasks.map(task => {
+        task.status = newStatus;
+        return this.taskService.updateTasksStatus(group.listID, task.taskID, newStatus); // Passa o objeto task completo
+      });
+
+      forkJoin(tasksObservables).subscribe(
+        () => {
+          console.log('Status das tarefas atualizado com sucesso!');
+          this.taskGroups$.next([...this.taskGroups$.getValue()]);
+        },
+        (error) => console.error('Erro ao atualizar status das tarefas:', error)
+      );
+    },
+    (error) => console.error('Erro ao atualizar status da lista:', error)
+  );
+}
 
 
-  updateTaskStatus(task: Task, listID: string): void {
-    const newStatus = task.status === 'concluido' ? 'concluido' : 'pendente';
 
-    this.taskService.updateTasksStatus(listID, task, newStatus).subscribe({
-      next: () => {
-        console.log('Status da tarefa atualizado com sucesso!');
-        this.updateParentStatusIfNeeded(task.listID); // Atualiza o pai após atualizar o filho
-      },
-      error: (error: HttpErrorResponse) => {
-        console.error('Erro ao atualizar o status da tarefa:', error);
-        this.snackBar.open('Erro ao atualizar o status da tarefa.', 'Fechar', { duration: 5000 });
+updateTaskStatus(task: Task, listID: string): void {
+  const newStatus = task.status === 'concluido' ? 'concluido' : 'pendente';
+
+  this.taskService.updateTasksStatus(listID, task.taskID, newStatus).subscribe({
+    next: () => {
+      console.log('Status da tarefa atualizado com sucesso!');
+      task.status = newStatus;
+      this.updateParentStatusIfNeeded(listID);
+      this.taskGroups$.next([...this.taskGroups$.getValue()]);
+    },
+    error: (error: HttpErrorResponse) => {
+      console.error('Erro ao atualizar o status da tarefa:', error);
+      this.snackBar.open('Erro ao atualizar o status da tarefa.', 'Fechar', { duration: 5000 });
+    }
+  });
+}
+
+private updateParentStatusIfNeeded(listID: string) {
+  this.taskGroups$.pipe(take(1)).subscribe(groups => {
+    const groupIndex = groups.findIndex(g => g.listID === listID);
+    if (groupIndex !== -1) {
+      const group = groups[groupIndex];
+      const allTasksCompleted = group.tasks.every(t => t.status === "concluido");
+
+      // Atualiza o status do grupo no backend se necessário
+      if (allTasksCompleted && group.listStatus !== 'concluido') {
+        this.taskService.updateParentTaskStatus(group.listID, 'concluido').subscribe(
+          () => {
+            console.log('Status do pai atualizado para "concluido" com sucesso!');
+            group.listStatus = 'concluido';
+            this.taskGroups$.next([...groups]);
+          },
+          (error) => console.error('Erro ao atualizar status do pai para "concluido":', error)
+        );
+      } else if (!allTasksCompleted && group.listStatus !== 'pendente') {
+        this.taskService.updateParentTaskStatus(group.listID, 'pendente').subscribe(
+          () => {
+            console.log('Status do pai atualizado para "pendente" com sucesso!');
+            group.listStatus = 'pendente';
+            this.taskGroups$.next([...groups]);
+          },
+          (error) => console.error('Erro ao atualizar status do pai para "pendente":', error)
+        );
       }
-    });
-  }
-
-
-  private updateParentStatusIfNeeded(listID: string) {
-    this.taskGroups$.pipe(take(1)).subscribe(groups => {
-      const groupIndex = groups.findIndex(g => g.listID === listID);
-      if (groupIndex !== -1) {
-        const group = groups[groupIndex];
-        const allTasksCompleted = group.tasks.every(t => t.status === "concluido");
-  
-        // Atualiza o status do grupo no backend se necessário
-        if (allTasksCompleted && group.listStatus !== 'concluido') {
-          this.taskService.updateListStatus(group.listID, 'concluido').subscribe(
-            () => console.log('Status do pai atualizado para "concluido" com sucesso!'),
-            (error) => console.error('Erro ao atualizar status do pai para "concluido":', error)
-          );
-        } else if (!allTasksCompleted && group.listStatus !== 'pendente') {
-          this.taskService.updateListStatus(group.listID, 'pendente').subscribe(
-            () => console.log('Status do pai atualizado para "pendente" com sucesso!'),
-            (error) => console.error('Erro ao atualizar status do pai para "pendente":', error)
-          );
-        }
-  
-        // Atualiza o status do grupo no frontend
-        group.listStatus = allTasksCompleted ? 'concluido' : 'pendente';
-        this.taskGroups$.next([...groups]); 
-      }
-    });
-  }
-  
+    }
+  });
+}
 
   deleteTaskList(listID: string) {
     if (confirm('Tem certeza que deseja excluir esta lista de tarefas?')) {
