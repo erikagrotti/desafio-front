@@ -156,35 +156,6 @@ export class AuthService {
     return accessToken;
   }
 
-  private async renewToken(): Promise<void> {
-  const refreshTokenString = localStorage.getItem('refreshToken');
-
-  if (refreshTokenString) {
-    try {
-      const cognitoUser = this.userPool.getCurrentUser();
-
-      if (cognitoUser) {
-        const refreshToken = new CognitoRefreshToken({ 
-          // Corrigindo a propriedade para "RefreshToken"
-          RefreshToken: refreshTokenString 
-        }); 
-        await cognitoUser.refreshSession(refreshToken, (err, session) => { 
-            if (err) {
-              console.error('Erro ao renovar token:', err);
-            } else {
-              this.storeSession(session);
-              this.authSubject.next(true);
-            }
-          });
-        } else {
-          console.warn('Nenhum usuário cognito encontrado');
-        }
-      } catch (error) {
-        console.error('Erro ao renovar token:', error);
-      }
-    }
-  }
-
   isAuthenticated(): boolean {
     return this.getAccessToken() !== null;
   }
