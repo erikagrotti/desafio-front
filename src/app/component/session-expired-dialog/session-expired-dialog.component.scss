@@ -1,0 +1,14 @@
+.button{
+      background-color: #28a745; /* Cor de fundo azul */
+      color: #fff; /* Cor do texto branca */
+      border: none; /* Sem borda */
+      padding: 10px 20px; /* Espaçamento interno */
+      border-radius: 5px; /* Bordas arredondadas */
+      font-weight: bold; /* Texto em negrito */
+      transition: background-color 0.3s ease; /* Transição suave na cor de fundo */
+  
+      &:hover {
+        background-color: #76b083; /* Cor de fundo mais escura ao passar o mouse */
+        cursor: pointer; /* Cursor de ponteiro */
+      }
+    }

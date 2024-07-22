@@ -10,7 +10,26 @@
   max-height: 70dvh;
   overflow-y: auto;
   margin: 2rem auto;
-  
+}
+/* Estilização do scrollbar */
+:host::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+:host::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+:host::-webkit-scrollbar-thumb {
+  background-color: #9264aa;
+  border-radius: 10px;
+  border: 3px solid #f1f1f1;
+}
+
+:host::-webkit-scrollbar-thumb:hover {
+  background: #9357b4;
 }
 
 /* Título principal */

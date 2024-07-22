@@ -67,35 +67,6 @@ export class TaskEditCardComponent implements OnInit {
     return `T${(maxTaskID + 1).toString().padStart(3, '0')}`;
   }
 
-  // toggleTaskStatus(task: Task) {
-  //   const newStatus = task.status === 'pendente' ? 'concluido' : 'pendente';
-  //   this.taskService.updateTaskStatus(this.taskGroup.listID, task.taskID, newStatus).subscribe({
-  //     next: () => {
-  //       task.status = newStatus;
-  //       this.checkIfAllTasksCompleted();
-  //     },
-  //     error: (error: HttpErrorResponse) => {
-  //       console.error('Erro ao atualizar o status da tarefa:', error);
-  //       this.snackBar.open('Erro ao atualizar o status da tarefa.', 'Fechar', { duration: 5000 });
-  //     }
-  //   });
-  // }
-
-  // checkIfAllTasksCompleted() {
-  //   const allTasksCompleted = this.taskGroup.tasks.every(task => task.status === 'concluido');
-  //   const newStatus = allTasksCompleted ? 'concluido' : 'pendente';
-  //   if (newStatus !== this.taskGroup.listStatus) {
-  //     this.taskService.updateListStatus(this.taskGroup.listID, newStatus).subscribe({
-  //       next: () => {
-  //         this.taskGroup.listStatus = newStatus;
-  //       },
-  //       error: (error: HttpErrorResponse) => {
-  //         console.error('Erro ao atualizar o status da lista:', error);
-  //         this.snackBar.open('Erro ao atualizar o status da lista.', 'Fechar', { duration: 5000 });
-  //       }
-  //     });
-  //   }
-  // }
 
   confirmDeleteTask(task: Task, listID: string) {
     if (confirm(`Tem certeza que deseja excluir a tarefa: ${task.title}?`)) {

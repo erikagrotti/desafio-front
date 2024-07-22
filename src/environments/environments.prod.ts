@@ -4,7 +4,7 @@ export const environment = {
     region: 'us-east-1',
     userPoolId: 'us-east-1_1AQUM4es1',
     clientId: 'r0nanlm9a1vbflnhcjqfgbg0s',
-    // urlLambda: 'https://mlpip6bwe2jraja3bqzsfopksi0yhxyv.lambda-url.us-east-1.on.aws/',
+    apiUrl: 'https://dc0y8bcyu5.execute-api.us-east-1.amazonaws.com/'
     }
   };
   

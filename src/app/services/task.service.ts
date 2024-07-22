@@ -4,6 +4,7 @@ import { Observable, forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Task, TaskGroup, EditTaskListData } from '../models/task.models';
 import { catchError } from 'rxjs/operators';
+import { environment } from '../../environments/environments.prod';
 
 @Injectable({
   providedIn: 'root',
@@ -11,8 +12,11 @@ import { catchError } from 'rxjs/operators';
 export class TaskService {
   private apiUrl = 'https://dc0y8bcyu5.execute-api.us-east-1.amazonaws.com/';
 
-  constructor(private http: HttpClient) {}
-
+  constructor(private http: HttpClient) {
+    const poolData = {
+      UserPoolId: environment.aws.apiUrl,
+  }
+  }
   // Obter todas as listas do usuário
   getLists(): Observable<TaskGroup[]> {
     return this.http.get<any[]>(`${this.apiUrl}/items`).pipe(
@@ -26,6 +30,7 @@ export class TaskService {
       )
     );
   }
+  
 
   // Obter tarefas de uma lista
   getTasks(listID: string): Observable<Task[]> {

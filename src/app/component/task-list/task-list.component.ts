@@ -13,6 +13,9 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { TaskEditCardComponent } from '../task-edit-card/task-edit-card.component';
 import { MatDialog } from '@angular/material/dialog';
 import { HttpErrorResponse } from '@angular/common/http';
+// import { AuthInterceptor } from '../../../../auth.interceptor';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 @Component({
   standalone: true,
@@ -27,16 +30,22 @@ import { HttpErrorResponse } from '@angular/common/http';
     MatListModule,
     MatIconModule,
     TaskEditCardComponent,
+    MatProgressSpinnerModule,
+    MatExpansionModule,
+   
   ],
 })
 export class TaskListComponent implements OnInit {
   taskGroups$: BehaviorSubject<TaskGroup[]> = new BehaviorSubject<TaskGroup[]>([]);
   editingTaskGroup: TaskGroup | undefined;
+  isLoading = true;
+  expandedPanels: string[] = [];
 
   constructor(
     private taskService: TaskService,
     private snackBar: MatSnackBar,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    // private authInterceptor: AuthInterceptor,
   ) {}
 
   ngOnInit(): void {
@@ -44,6 +53,7 @@ export class TaskListComponent implements OnInit {
   }
 
   loadTaskGroups() {
+    this.isLoading = true;
     this.taskService.getLists().pipe(
       switchMap((lists) => {
         const tasksObservables = lists.map((list) =>
@@ -67,9 +77,11 @@ export class TaskListComponent implements OnInit {
       next: (taskGroups: TaskGroup[]) => {
         const filteredTaskGroups = taskGroups.filter(group => group.tasks.length > 0);
         this.taskGroups$.next(filteredTaskGroups);
+        this.isLoading = false;
       },
       error: (error: HttpErrorResponse) => {
         console.error('Erro ao carregar listas e tarefas:', error);
+        this.isLoading = false;
       },
     });
   }
@@ -220,5 +232,17 @@ private updateParentStatusIfNeeded(listID: string) {
 
   cancelTaskListEdit() {
     this.editingTaskGroup = undefined;
+  }
+
+  isPanelOpen(panelId: string): boolean {
+    return this.expandedPanels.includes(panelId);
+  }
+
+  togglePanel(panelId: string): void {
+    if (this.isPanelOpen(panelId)) {
+      this.expandedPanels = this.expandedPanels.filter(id => id !== panelId);
+    } else {
+      this.expandedPanels.push(panelId);
+    }
   }
 }

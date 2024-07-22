@@ -1,30 +1,42 @@
-<mat-list *ngFor="let group of (taskGroups$ | async)">
-  <mat-list-item [ngClass]="{'parent-task': true}">
-    <mat-checkbox [checked]="group.listStatus === 'concluido'" (change)="updateListStatus(group)">
-      {{ group.listTitle }}
-    </mat-checkbox>
+<div class="list_container" [ngStyle]="{'background-color': isLoading ? 'transparent' : '#F7F9F9'}">
+  <mat-progress-spinner class="progress-spinner" *ngIf="isLoading" mode="indeterminate"></mat-progress-spinner>
 
-    <div class="button-group">
-      <button mat-icon-button class="edit-button" (click)="editTaskList(group)">
-        <mat-icon>edit</mat-icon>
-      </button>
-      <button mat-icon-button class="delete-button" (click)="deleteTaskList(group.listID)">
-        <mat-icon>delete</mat-icon>
-      </button>
-    </div>
-  </mat-list-item>
+  <mat-accordion *ngIf="!isLoading" multi>
+    <mat-expansion-panel *ngFor="let group of (taskGroups$ | async)" 
+                         [expanded]="isPanelOpen(group.listID)"
+                         (opened)="togglePanel(group.listID)"
+                         (closed)="togglePanel(group.listID)">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <mat-checkbox [checked]="group.listStatus === 'concluido'" (change)="updateListStatus(group)">
+            {{ group.listTitle }}
+          </mat-checkbox> 
+        </mat-panel-title>
+        <div class="button-group"> 
+          <button mat-icon-button class="edit-button" (click)="editTaskList(group)">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button class="delete-button" (click)="deleteTaskList(group.listID)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </mat-expansion-panel-header>
 
-  <!-- Verifique se há tarefas antes de renderizar a lista -->
-  <div *ngIf="group.tasks.length === 0">
-    <p>Nenhuma tarefa encontrada.</p>
-  </div>
+      <div *ngIf="group.tasks.length === 0">
+        <p>Nenhuma tarefa encontrada.</p>
+      </div>
 
-  <mat-list *ngIf="group.tasks.length > 0">
-    <mat-list-item *ngFor="let task of group.tasks" class="task-list-item">
-      <app-task-item
-          [task]="task"
-          (statusChange)="updateTaskStatus(task, group.listID)">
-      </app-task-item>
-    </mat-list-item>
-  </mat-list>
-</mat-list>
+      <mat-list *ngIf="group.tasks.length > 0">
+        <mat-list-item *ngFor="let task of group.tasks" class="task-list-item">
+          <app-task-item
+            [task]="task"
+            (statusChange)="updateTaskStatus(task, group.listID)">
+            <span [ngClass]="{'completed': task.status === 'concluido'}">
+              {{ task.title }} 
+            </span>
+          </app-task-item>
+        </mat-list-item>
+      </mat-list>
+    </mat-expansion-panel>
+  </mat-accordion>
+</div>

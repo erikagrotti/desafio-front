@@ -18,7 +18,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar'
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
-
+import { SessionExpiredDialogComponent } from './component/session-expired-dialog/session-expired-dialog.component';
 
 @Component({
   selector: 'app-root',
@@ -43,6 +43,7 @@ import { CommonModule } from '@angular/common';
     MatSidenavModule,
     MatButtonModule,
     CommonModule,
+    SessionExpiredDialogComponent
     
 ],
   templateUrl: './app.component.html',
