@@ -10,7 +10,7 @@ import { environment } from '../../environments/environments.prod';
   providedIn: 'root',
 })
 export class TaskService {
-  private apiUrl = 'https://dc0y8bcyu5.execute-api.us-east-1.amazonaws.com/';
+  private apiUrl = environment.aws.apiUrl ;
 
   constructor(private http: HttpClient) {
     const poolData = {
